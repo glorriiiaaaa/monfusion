@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, jsonify, request, session
 
 from auth_utils import require_user
@@ -16,8 +17,6 @@ def api_session():
             "user_name": session.get("user_name", ""),
         }
     )
-
-
 @bp.route("/api/signup", methods=["POST"])
 def api_signup():
     d = request.json
@@ -27,12 +26,16 @@ def api_signup():
     ph = d.get("phone", "").strip()
     if len(nm) < 3:
         return jsonify({"error": "Name must be at least 3 characters"}), 400
+    if not re.fullmatch(r"[A-Za-z]+(?:[ '][A-Za-z]+)*", nm):
+        return jsonify({"error": "Name can only contain letters and spaces"}), 400
     if "@" not in em or "." not in em:
         return jsonify({"error": "Invalid email"}), 400
     if len(pw) < 8:
         return jsonify({"error": "Password must be at least 8 characters"}), 400
     if ph and (not ph.isdigit() or len(ph) != 10):
         return jsonify({"error": "Phone must be 10 digits"}), 400
+    if ph and not re.match(r"^[6-9][0-9]{9}$", ph):
+        return jsonify({"error": "Phone must be 10 digits and start with 6-9"}), 400
     c = db()
     try:
         c.execute(
