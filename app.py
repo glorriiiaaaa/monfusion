@@ -15,25 +15,6 @@ from flask import Flask
 
 from db_utils import init_db
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 from routes import pages_bp, customer_blueprints, admin_blueprints
 
 app = Flask(__name__, static_folder=".")
