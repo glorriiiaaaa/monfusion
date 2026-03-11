@@ -1442,7 +1442,7 @@ footer {
           <span class="form-error" id="ckCity-e">City is required</span>
         </div>
         <div class="form-group">
-          <label>State</label>
+          <label>State *</label>
           <input type="text" id="ckState" class="form-control" placeholder="Your state">
         </div>
       </div>
@@ -1660,7 +1660,7 @@ footer {
         <div class="form-group">
           <label>Your Name *</label>
           <input type="text" id="ctName" class="form-control" placeholder="Full name">
-          <span class="form-error" id="ctName-e">Name must be at least 3 characters</span>
+          <span class="form-error" id="ctName-e">Enter a valid name</span>
         </div>
         <div class="form-group">
           <label>Email *</label>
@@ -2700,15 +2700,18 @@ async function applyCoupon() {
 }
 
 // Checkout validation
+
 const ckValidators = {
   ckName:  v => v.trim().length >= 3,
   ckPhone: v => /^\d{10}$/.test(v.trim()),
   ckEmail: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
   ckHouse: v => v.trim().length > 0,
   ckArea:  v => v.trim().length > 0,
-  ckCity:  v => v.trim().length > 0,
+  ckState: v =>/^[A-Za-z ]+$/.test(v.trim()),
+  ckCity:  v => /^[A-Za-z ]+$/.test(v.trim()),
   ckPin:   v => /^\d{6}$/.test(v.trim()),
 };
+
 
 function validateChk(id) {
   const el = document.getElementById(id);
@@ -2721,7 +2724,7 @@ function validateChk(id) {
 }
 
 function validateCheckout() {
-  const fields = ['ckName','ckPhone','ckEmail','ckHouse','ckArea','ckCity','ckPin'];
+  const fields = ['ckName','ckPhone','ckEmail','ckHouse','ckArea','ckCity','ckPin','ckState'];
   let ok = true;
   fields.forEach(f => { if (!validateChk(f)) ok = false; });
   if (!ok) {
@@ -3009,21 +3012,65 @@ async function doSignup() {
 // ═══════════════════════════════════════════
 //  CONTACT
 // ═══════════════════════════════════════════
-function sendContact() {
+
+  function sendContact() {
   const nm  = document.getElementById('ctName').value.trim();
   const em  = document.getElementById('ctEmail').value.trim();
   const msg = document.getElementById('ctMsg').value.trim();
+
+  const nameRegex  = /^[A-Za-z' ]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   let ok = true;
-  if (nm.length < 3) { document.getElementById('ctName-e').classList.add('show'); document.getElementById('ctName').classList.add('invalid'); ok=false; }
-  else { document.getElementById('ctName-e').classList.remove('show'); document.getElementById('ctName').classList.remove('invalid'); }
-  if (!em.includes('@')) { document.getElementById('ctEmail-e').classList.add('show'); document.getElementById('ctEmail').classList.add('invalid'); ok=false; }
-  else { document.getElementById('ctEmail-e').classList.remove('show'); document.getElementById('ctEmail').classList.remove('invalid'); }
-  if (!msg) { document.getElementById('ctMsg-e').classList.add('show'); document.getElementById('ctMsg').classList.add('invalid'); ok=false; }
-  else { document.getElementById('ctMsg-e').classList.remove('show'); document.getElementById('ctMsg').classList.remove('invalid'); }
-  if (!ok) { document.getElementById('ctBtn').classList.add('shake'); setTimeout(()=>document.getElementById('ctBtn').classList.remove('shake'),500); return; }
-  showToast('Message sent! We\'ll get back to you soon 📩','success');
-  document.getElementById('ctName').value=''; document.getElementById('ctEmail').value=''; document.getElementById('ctMsg').value='';
-  document.querySelectorAll('#page-contact .form-control').forEach(el=>{el.classList.remove('valid','invalid');});
+
+  // Name validation
+  if (!nameRegex.test(nm) || nm.length < 3) {
+    document.getElementById('ctName-e').classList.add('show');
+    document.getElementById('ctName').classList.add('invalid');
+    ok = false;
+  } else {
+    document.getElementById('ctName-e').classList.remove('show');
+    document.getElementById('ctName').classList.remove('invalid');
+  }
+
+  // Email validation
+  if (!emailRegex.test(em)) {
+    document.getElementById('ctEmail-e').classList.add('show');
+    document.getElementById('ctEmail').classList.add('invalid');
+    ok = false;
+  } else {
+    document.getElementById('ctEmail-e').classList.remove('show');
+    document.getElementById('ctEmail').classList.remove('invalid');
+  }
+
+  // Message validation
+  if (!msg) {
+    document.getElementById('ctMsg-e').classList.add('show');
+    document.getElementById('ctMsg').classList.add('invalid');
+    ok = false;
+  } else {
+    document.getElementById('ctMsg-e').classList.remove('show');
+    document.getElementById('ctMsg').classList.remove('invalid');
+  }
+
+  // If validation fails
+  if (!ok) {
+    document.getElementById('ctBtn').classList.add('shake');
+    setTimeout(() => {
+      document.getElementById('ctBtn').classList.remove('shake');
+    }, 500);
+    return;
+  }
+
+  // Success
+  showToast("Message sent! We'll get back to you soon 📩", "success");
+
+  document.getElementById('ctName').value = '';
+  document.getElementById('ctEmail').value = '';
+  document.getElementById('ctMsg').value = '';
+
+  document.querySelectorAll('#page-contact .form-control')
+    .forEach(el => el.classList.remove('valid', 'invalid'));
 }
 
 // ═══════════════════════════════════════════
