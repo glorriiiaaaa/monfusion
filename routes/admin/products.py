@@ -1,9 +1,17 @@
 import json
+import os
+import uuid
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 
 from auth_utils import require_admin
 from db_utils import db
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'uploads', 'products')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 bp = Blueprint("admin_products", __name__)
 
@@ -104,3 +112,31 @@ def admin_delete_product(pid):
     c.commit()
     c.close()
     return jsonify({"success": True})
+
+
+@bp.route("/api/admin/upload-image", methods=["POST"])
+@require_admin
+def admin_upload_image():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file provided"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+    if not allowed_file(file.filename):
+        return jsonify({"error": "File type not allowed. Use PNG, JPG, GIF or WebP"}), 400
+
+    # Limit file size to 5MB
+    file.seek(0, 2)
+    size = file.tell()
+    file.seek(0)
+    if size > 5 * 1024 * 1024:
+        return jsonify({"error": "File too large. Maximum size is 5MB"}), 400
+
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    ext      = file.filename.rsplit('.', 1)[1].lower()
+    filename = f"{uuid.uuid4().hex}.{ext}"
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(filepath)
+
+    url = f"/static/uploads/products/{filename}"
+    return jsonify({"success": True, "url": url})

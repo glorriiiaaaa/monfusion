@@ -224,6 +224,10 @@ select.form-control option{background:var(--card2)}
 .img-add-row{display:flex;gap:8px}
 .img-add-row input{flex:1}
 .img-add-row button{flex-shrink:0}
+.img-upload-label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:7px 14px;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--rd);font-size:.8rem;color:var(--tx);font-weight:600;transition:border-color .15s,background .15s;white-space:nowrap}
+.img-upload-label:hover{border-color:var(--ac);background:rgba(255,79,139,.07)}
+.img-upload-input{display:none}
+.img-uploading{opacity:.6;pointer-events:none}
 
 /* ── ORDER EXPAND ── */
 .order-items-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
@@ -342,11 +346,27 @@ select.form-control option{background:var(--card2)}
         <button class="nav-item" onclick="showSection('coupons')">
           <span class="nav-icon">🎟</span> Coupons
         </button>
+        <button class="nav-item" onclick="showSection('categories')">
+          <span class="nav-icon">🗂</span> Categories
+        </button>
+        <button class="nav-item" onclick="showSection('festival')">
+          <span class="nav-icon">🎆</span> Festival Section
+        </button>
       </div>
       <div class="nav-section">
         <div class="nav-section-title">Users</div>
         <button class="nav-item" onclick="showSection('customers')">
           <span class="nav-icon">👥</span> Customers
+        </button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <button class="nav-item" onclick="showSection('contact')">
+          <span class="nav-icon">📩</span> Contact Messages
+          <span class="nav-badge" id="unreadBadge" style="display:none">0</span>
+        </button>
+        <button class="nav-item" onclick="showSection('sitecontent')">
+          <span class="nav-icon">✏️</span> Site Content
         </button>
       </div>
       <div class="nav-section">
@@ -576,6 +596,236 @@ select.form-control option{background:var(--card2)}
         </div>
       </div>
 
+      <!-- ══════════════════ CATEGORIES ══════════════════ -->
+      <div class="page" id="sec-categories">
+        <div class="page-head">
+          <div><h2>Product Categories</h2><p>Add or remove product categories. Changes apply site-wide.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadCategories()">🔄 Refresh</button>
+        </div>
+        <div style="max-width:480px">
+          <div class="card" style="padding:24px;margin-bottom:20px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:16px">➕ Add New Category</h3>
+            <div style="display:flex;gap:10px">
+              <input type="text" id="newCatInput" class="form-control" placeholder="e.g. Stickers" onkeydown="if(event.key==='Enter')addCategory()">
+              <button class="btn btn-primary btn-sm" onclick="addCategory()">Add</button>
+            </div>
+            <span id="newCatErr" style="font-size:.78rem;color:var(--red);display:none;margin-top:6px;display:block"></span>
+          </div>
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:16px">📋 Existing Categories</h3>
+            <div id="categoriesList"><div class="loading-state"><div class="spinner big-spin"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════ SITE CONTENT ══════════════════ -->
+      <div class="page" id="sec-sitecontent">
+        <div class="page-head">
+          <div><h2>Site Content</h2><p>Edit the text and images shown on the customer-facing website.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadSiteContent()">🔄 Refresh</button>
+        </div>
+        <div style="max-width:680px;display:flex;flex-direction:column;gap:20px">
+
+          <!-- ANNOUNCEMENT BAR -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">📢 Announcement Bar</h3>
+            <div class="form-group"><label>Scrolling Text</label><input type="text" id="sc_marquee_text" class="form-control" placeholder="e.g. 🎁 FREE DELIVERY ABOVE ₹499 | ✨ CUSTOM POLAROIDS FROM ₹199"></div>
+          </div>
+
+          <!-- HERO -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">🏠 Homepage Hero</h3>
+            <div class="form-group"><label>Badge Text</label><input type="text" id="sc_hero_badge" class="form-control" placeholder="e.g. 🌸 India's Most Loved Gift Store"></div>
+            <div class="form-group"><label>Headline</label><input type="text" id="sc_hero_title" class="form-control" placeholder="e.g. Gifts that speak from the heart"></div>
+            <div class="form-group"><label>Subheadline</label><textarea id="sc_hero_subtitle" class="form-control" rows="2"></textarea></div>
+            <div class="form-group"><label>Hero Image URL</label><input type="text" id="sc_hero_image" class="form-control" placeholder="https://..."></div>
+          </div>
+
+          <!-- STATS -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">📊 Stats (Hero · Stats Bar · About Page)</h3>
+            <div class="form-row">
+              <div class="form-group"><label>Stat 1 Value</label><input type="text" id="sc_stat1_val" class="form-control" placeholder="10K+"></div>
+              <div class="form-group"><label>Stat 1 Label</label><input type="text" id="sc_stat1_label" class="form-control" placeholder="Happy Customers"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Stat 2 Value</label><input type="text" id="sc_stat2_val" class="form-control" placeholder="50+"></div>
+              <div class="form-group"><label>Stat 2 Label</label><input type="text" id="sc_stat2_label" class="form-control" placeholder="Unique Products"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Stat 3 Value</label><input type="text" id="sc_stat3_val" class="form-control" placeholder="4.9★"></div>
+              <div class="form-group"><label>Stat 3 Label</label><input type="text" id="sc_stat3_label" class="form-control" placeholder="Average Rating"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Stat 4 Value</label><input type="text" id="sc_stat4_val" class="form-control" placeholder="3–5d"></div>
+              <div class="form-group"><label>Stat 4 Label</label><input type="text" id="sc_stat4_label" class="form-control" placeholder="Delivery"></div>
+            </div>
+          </div>
+
+          <!-- HOMEPAGE SECTIONS -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">🏷 Homepage Section Headings</h3>
+            <div class="form-row">
+              <div class="form-group"><label>Best Sellers Tag</label><input type="text" id="sc_section_bestsellers_tag" class="form-control" placeholder="Most Popular"></div>
+              <div class="form-group"><label>Best Sellers Title</label><input type="text" id="sc_section_bestsellers_title" class="form-control" placeholder="Best Selling Products"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Festival Banner Title</label><input type="text" id="sc_section_festival_title" class="form-control" placeholder="Festival Special Gifts"></div>
+              <div class="form-group"><label>Festival Section Sub</label><input type="text" id="sc_section_festival_sub" class="form-control" placeholder="Curated for Every Celebration"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Most Liked Tag</label><input type="text" id="sc_section_mostliked_tag" class="form-control" placeholder="Community Favourites"></div>
+              <div class="form-group"><label>Most Liked Title</label><input type="text" id="sc_section_mostliked_title" class="form-control" placeholder="Most Liked Products"></div>
+            </div>
+          </div>
+
+          <!-- ABOUT -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">💫 About Page</h3>
+            <div class="form-group"><label>Story Subheading</label><input type="text" id="sc_about_story_sub" class="form-control" placeholder="Born from a love of meaningful gifting..."></div>
+            <div class="form-group"><label>Section Title</label><input type="text" id="sc_about_title" class="form-control" placeholder="e.g. Turning Moments into Memories"></div>
+            <div class="form-group"><label>Paragraph 1</label><textarea id="sc_about_para1" class="form-control" rows="3"></textarea></div>
+            <div class="form-group"><label>Paragraph 2</label><textarea id="sc_about_para2" class="form-control" rows="3"></textarea></div>
+            <div class="form-group"><label>Paragraph 3</label><textarea id="sc_about_para3" class="form-control" rows="2"></textarea></div>
+            <div class="form-group"><label>About Image URL</label><input type="text" id="sc_about_image" class="form-control" placeholder="https://..."></div>
+          </div>
+
+          <!-- CONTACT INFO -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">📞 Contact Info</h3>
+            <div class="form-row">
+              <div class="form-group"><label>WhatsApp Number</label><input type="text" id="sc_contact_whatsapp" class="form-control" placeholder="+91 98765 43210"></div>
+              <div class="form-group"><label>Email</label><input type="text" id="sc_contact_email" class="form-control" placeholder="hello@monsfusion.com"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Instagram Handle</label><input type="text" id="sc_contact_instagram" class="form-control" placeholder="@monsfusion"></div>
+              <div class="form-group"><label>Working Hours</label><input type="text" id="sc_contact_hours" class="form-control" placeholder="Mon–Sat: 10am – 8pm IST"></div>
+            </div>
+          </div>
+
+          <!-- FOOTER -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">🦶 Footer</h3>
+            <div class="form-group"><label>Brand Description</label><textarea id="sc_footer_desc" class="form-control" rows="2"></textarea></div>
+            <div class="form-group"><label>Copyright Text</label><input type="text" id="sc_footer_copyright" class="form-control" placeholder="© 2024 Mons Fusion. All rights reserved."></div>
+          </div>
+
+          <div style="display:flex;gap:12px;justify-content:flex-end">
+            <button class="btn btn-ghost btn-sm" onclick="loadSiteContent()">↺ Reset</button>
+            <button class="btn btn-primary" onclick="saveSiteContent()" id="scSaveBtn">💾 Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════ FESTIVAL SECTION ══════════════════ -->
+      <div class="page" id="sec-festival">
+        <div class="page-head">
+          <div><h2>Festival Section</h2><p>Control the festive gift section shown on the homepage.</p></div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span id="festLiveTag" style="display:none;font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:99px;background:rgba(0,214,143,.15);color:var(--green)">● LIVE</span>
+            <button class="btn btn-ghost btn-sm" onclick="loadFestival()">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px">
+
+          <!-- Settings Card -->
+          <div class="card" style="padding:24px;grid-column:1/-1">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">⚙️ Festival Settings</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Festival Name</label>
+                <input type="text" id="festName" class="form-control" placeholder="e.g. Diwali Special, Christmas Gifts">
+              </div>
+              <div class="form-group">
+                <label>Emoji / Icon</label>
+                <input type="text" id="festEmoji" class="form-control" placeholder="e.g. ✨🎆✨ or 🪔🎁🪔">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Offer Text <span style="color:var(--dg);font-weight:400;font-size:.75rem">(optional — shown as a badge)</span></label>
+              <input type="text" id="festOfferText" class="form-control" placeholder="e.g. Flat 20% Off · Free Delivery · Buy 2 Get 1">
+            </div>
+            <div class="form-group">
+              <label>Subtext / Occasions</label>
+              <input type="text" id="festSubText" class="form-control" placeholder="e.g. Birthdays · Anniversaries · Diwali · Christmas">
+            </div>
+            <div class="form-group">
+              <label>Banner Image <span style="color:var(--dg);font-weight:400;font-size:.75rem">(optional — replaces the dark gradient banner)</span></label>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <input type="text" id="festBannerImage" class="form-control" placeholder="Paste image URL or upload a file" style="flex:1;min-width:200px">
+                <input type="file" id="festBannerFileInput" class="img-upload-input" accept="image/png,image/jpeg,image/gif,image/webp" onchange="uploadFestBanner(this)">
+                <label for="festBannerFileInput" class="img-upload-label" id="festBannerUploadLabel">📁 Upload</label>
+              </div>
+              <div id="festBannerPreview" style="display:none;margin-top:10px;position:relative;display:inline-block">
+                <img id="festBannerPreviewImg" src="" alt="Banner preview" style="max-height:120px;max-width:100%;border-radius:10px;border:1.5px solid var(--border);object-fit:cover">
+                <button onclick="clearFestBanner()" style="position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--danger);color:#fff;border:none;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.88rem;font-weight:600">
+                <input type="checkbox" id="festActive" style="width:16px;height:16px;cursor:pointer">
+                Show this section on homepage (make it live)
+              </label>
+              <button class="btn btn-primary" onclick="saveFestivalSettings()" id="festSaveBtn">💾 Save Settings</button>
+            </div>
+          </div>
+
+          <!-- Product Picker -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px">➕ Add Products</h3>
+            <p style="font-size:.75rem;color:var(--dg);margin-bottom:14px">Search and add products to this festival section</p>
+            <div style="display:flex;gap:8px;margin-bottom:14px">
+              <input type="text" id="festProdSearch" class="form-control" placeholder="Search product name..." oninput="searchFestProducts()">
+            </div>
+            <div id="festProdResults" style="max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:6px">
+              <p style="font-size:.8rem;color:var(--dg)">Start typing to search products...</p>
+            </div>
+          </div>
+
+          <!-- Selected Products -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px">🎁 Selected Products</h3>
+            <p style="font-size:.75rem;color:var(--dg);margin-bottom:14px">Products shown in the festival section</p>
+            <div id="festSelectedProducts" style="display:flex;flex-direction:column;gap:8px">
+              <p style="font-size:.8rem;color:var(--dg)">No products selected yet.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══════════════════ CONTACT MESSAGES ══════════════════ -->
+      <div class="page" id="sec-contact">
+        <div class="page-head">
+          <div><h2>Contact Messages</h2><p>Customer enquiries submitted via the contact form.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadContactMessages()">🔄 Refresh</button>
+        </div>
+
+        <div class="filter-row">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" id="contactSearch" placeholder="Search messages..." oninput="filterContactMessages()">
+          </div>
+          <select class="form-control" id="contactFilter" onchange="filterContactMessages()" style="width:auto;padding:8px 12px">
+            <option value="all">All Messages</option>
+            <option value="unread">Unread Only</option>
+            <option value="read">Read Only</option>
+          </select>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Subject</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="contactTbody">
+              <tr><td colspan="9" class="loading-state"><div class="spinner big-spin"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div><!-- /content -->
   </main>
 </div><!-- /adminApp -->
@@ -597,7 +847,8 @@ select.form-control option{background:var(--card2)}
     <div class="form-row">
       <div class="form-group">
         <label>Price (₹) *</label>
-        <input type="number" id="pPrice" class="form-control" placeholder="299" min="0">
+        <input type="number" id="pPrice" class="form-control" placeholder="299" min="0" oninput="validatePrice()">
+        <span id="pPrice-e" style="font-size:.75rem;color:var(--red);display:none;margin-top:4px">Price cannot be negative</span>
       </div>
       <div class="form-group">
         <label>Discount (%)</label>
@@ -608,10 +859,7 @@ select.form-control option{background:var(--card2)}
       <div class="form-group">
         <label>Category</label>
         <select id="pCategory" class="form-control">
-          <option value="">Select category</option>
-          <option>Polaroids</option><option>Albums</option><option>Magazines</option>
-          <option>Keychains</option><option>Frames</option><option>Fridge Magnets</option>
-          <option>Hampers</option><option>Room Décor</option>
+          <option value="">Loading categories...</option>
         </select>
       </div>
       <div class="form-group">
@@ -643,13 +891,15 @@ select.form-control option{background:var(--card2)}
       <textarea id="pDesc" class="form-control" placeholder="Product description..."></textarea>
     </div>
     <div class="form-group">
-      <label>Product Images (URLs)</label>
+      <label>Product Images</label>
       <div class="img-list" id="imgPreviewList"></div>
-      <div class="img-add-row">
-        <input type="text" id="imgUrlInput" class="form-control" placeholder="Paste image URL (e.g. https://images.unsplash.com/...)">
-        <button class="btn btn-ghost btn-sm" onclick="addImageUrl()">＋ Add</button>
+      <div class="img-add-row" style="flex-wrap:wrap;gap:8px">
+        <input type="text" id="imgUrlInput" class="form-control" placeholder="Paste image URL…" style="min-width:180px">
+        <button class="btn btn-ghost btn-sm" onclick="addImageUrl()">＋ Add URL</button>
+        <input type="file" id="imgFileInput" class="img-upload-input" accept="image/png,image/jpeg,image/gif,image/webp" multiple onchange="uploadProductImages(this)">
+        <label for="imgFileInput" class="img-upload-label" id="imgUploadLabel">📁 Upload File</label>
       </div>
-      <p style="font-size:.72rem;color:var(--dg);margin-top:6px">💡 Use Unsplash URLs for high-quality free images</p>
+      <p style="font-size:.72rem;color:var(--dg);margin-top:6px">Upload files (PNG/JPG/WebP, max 5MB each) <em>or</em> paste an image URL</p>
     </div>
     <div class="form-group">
       <label>Flags</label>
@@ -839,7 +1089,11 @@ function startClock() {
 // ═══════════════════════════════════════════════════════
 const sectionTitles = {
   dashboard:'Dashboard', analytics:'Analytics', products:'Product Management',
-  orders:'Order Management', coupons:'Coupon Management', customers:'Customers'
+  orders:'Order Management', coupons:'Coupon Management', customers:'Customers',
+  contact:'Contact Messages',
+  categories:'Product Categories',
+  sitecontent:'Site Content',
+  festival:'Festival Section'
 };
 
 function showSection(id) {
@@ -852,7 +1106,11 @@ function showSection(id) {
   const loaders = {
     dashboard: refreshDashboard, analytics: loadAnalytics,
     products: loadProducts, orders: loadOrders,
-    coupons: loadCoupons, customers: loadCustomers
+    coupons: loadCoupons, customers: loadCustomers,
+    contact: loadContactMessages,
+    categories: loadCategories,
+    sitecontent: loadSiteContent,
+    festival: loadFestival
   };
   if (loaders[id]) loaders[id]();
 }
@@ -1152,12 +1410,15 @@ function openProductModal(product=null) {
   document.getElementById('productModalTitle').textContent = 'Add New Product';
   document.getElementById('saveProductBtn').textContent = '💾 Save Product';
   editImageUrls = [];
+  // Populate dynamic category dropdown
+  populateCategoryDropdown('');
   // Reset form
   ['pName','pPrice','pDiscount','pSubcat','pDesc'].forEach(id=>document.getElementById(id).value='');
-  ['pCategory','pGender'].forEach(id=>document.getElementById(id).value='');
+  ['pGender'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('pActive').value='1';
   ['pBestSeller','pFestival','pMostLiked'].forEach(id=>document.getElementById(id).checked=false);
   document.getElementById('imgUrlInput').value='';
+  document.getElementById('imgFileInput').value='';
   renderImgPreviews();
   openModal('productModal');
 }
@@ -1170,7 +1431,7 @@ function editProduct(id) {
   document.getElementById('pName').value = p.name||'';
   document.getElementById('pPrice').value = p.price||0;
   document.getElementById('pDiscount').value = p.discount||0;
-  document.getElementById('pCategory').value = p.category||'';
+  populateCategoryDropdown(p.category||'');
   document.getElementById('pSubcat').value = p.subcategory||'';
   document.getElementById('pGender').value = p.gender_tag||'';
   document.getElementById('pDesc').value = p.description||'';
@@ -1185,11 +1446,31 @@ function editProduct(id) {
   openModal('productModal');
 }
 
+function validatePrice() {
+  const val = parseFloat(document.getElementById('pPrice').value);
+  const err = document.getElementById('pPrice-e');
+  const inp = document.getElementById('pPrice');
+  if (val < 0 || isNaN(val)) {
+    err.style.display = 'block';
+    inp.style.borderColor = 'var(--red)';
+    return false;
+  }
+  err.style.display = 'none';
+  inp.style.borderColor = '';
+  return true;
+}
+
 async function saveProduct() {
   const id = document.getElementById('editProductId').value;
   const name = document.getElementById('pName').value.trim();
-  const price = parseFloat(document.getElementById('pPrice').value)||0;
+  const price = parseFloat(document.getElementById('pPrice').value);
   if (!name) { toast('Product name is required','error'); return; }
+  if (isNaN(price) || price < 0) {
+    toast('Price cannot be negative','error');
+    validatePrice();
+    document.getElementById('pPrice').focus();
+    return;
+  }
   if (!price) { toast('Price must be greater than 0','error'); return; }
 
   const btn = document.getElementById('saveProductBtn');
@@ -1236,6 +1517,38 @@ function addImageUrl() {
   editImageUrls.push(url);
   inp.value='';
   renderImgPreviews();
+}
+
+async function uploadProductImages(input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  const label = document.getElementById('imgUploadLabel');
+  label.textContent = '⏳ Uploading...';
+  label.classList.add('img-uploading');
+
+  let uploaded = 0;
+  for (const file of files) {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const r = await fetch('/api/admin/upload-image', {method:'POST', body: formData});
+      const d = await r.json();
+      if (d.url) {
+        editImageUrls.push(d.url);
+        uploaded++;
+      } else {
+        toast(d.error || 'Upload failed', 'error');
+      }
+    } catch(e) {
+      toast('Upload failed: ' + file.name, 'error');
+    }
+  }
+
+  renderImgPreviews();
+  label.textContent = '📁 Upload File';
+  label.classList.remove('img-uploading');
+  input.value = '';
+  if (uploaded) toast(`${uploaded} image${uploaded>1?'s':''} uploaded ✅`, 'success');
 }
 
 function removeImg(i) { editImageUrls.splice(i,1); renderImgPreviews(); }
@@ -1542,6 +1855,380 @@ function renderCustomersTable(customers) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  CONTACT MESSAGES
+// ═══════════════════════════════════════════════════════
+let allContactMessages = [];
+
+async function loadContactMessages() {
+  document.getElementById('contactTbody').innerHTML = `<tr><td colspan="9"><div class="loading-state"><div class="spinner big-spin"></div></div></td></tr>`;
+  try {
+    allContactMessages = await API.get('/api/admin/contact-messages');
+    renderContactTable(allContactMessages);
+    // Update unread badge
+    const unread = allContactMessages.filter(m => !m.is_read).length;
+    const badge = document.getElementById('unreadBadge');
+    if (unread > 0) { badge.textContent = unread; badge.style.display = ''; }
+    else { badge.style.display = 'none'; }
+  } catch(e) { toast('Failed to load contact messages', 'error'); }
+}
+
+function filterContactMessages() {
+  const q = document.getElementById('contactSearch').value.toLowerCase();
+  const filter = document.getElementById('contactFilter').value;
+  let msgs = allContactMessages;
+  if (filter === 'unread') msgs = msgs.filter(m => !m.is_read);
+  if (filter === 'read')   msgs = msgs.filter(m => m.is_read);
+  if (q) msgs = msgs.filter(m =>
+    m.name.toLowerCase().includes(q) ||
+    m.email.toLowerCase().includes(q) ||
+    (m.message||'').toLowerCase().includes(q) ||
+    (m.subject||'').toLowerCase().includes(q)
+  );
+  renderContactTable(msgs);
+}
+
+function renderContactTable(msgs) {
+  const tbody = document.getElementById('contactTbody');
+  if (!msgs.length) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><div class="ei">📩</div><h3>No messages found</h3><p>Contact form submissions will appear here.</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = msgs.map((m, i) => `
+    <tr style="${m.is_read ? '' : 'background:rgba(255,79,139,.04);font-weight:600'}">
+      <td style="color:var(--dg);font-size:.8rem">${i + 1}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pk),var(--ac));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;flex-shrink:0">${(m.name||'?')[0].toUpperCase()}</div>
+          <div class="tbl-name">${escHtml(m.name)}</div>
+        </div>
+      </td>
+      <td style="font-size:.82rem">${escHtml(m.email)}</td>
+      <td style="font-size:.82rem;color:var(--dg)">${m.phone ? `📞 ${escHtml(m.phone)}` : '—'}</td>
+      <td><span class="badge badge-blue" style="font-size:.72rem">${escHtml(m.subject||'General Inquiry')}</span></td>
+      <td style="font-size:.82rem;max-width:260px;white-space:normal;line-height:1.5;color:var(--dg)">${escHtml(m.message).slice(0,120)}${m.message && m.message.length > 120 ? '…' : ''}</td>
+      <td style="font-size:.75rem;color:var(--dg);white-space:nowrap">${fmtDate(m.created_at)}</td>
+      <td>${m.is_read
+        ? '<span class="badge" style="background:rgba(255,255,255,.08);color:var(--dg)">Read</span>'
+        : '<span class="badge badge-orange">Unread</span>'}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          ${!m.is_read ? `<button class="btn btn-ghost btn-sm" onclick="markContactRead(${m.id})" title="Mark as read">✅</button>` : ''}
+          <button class="btn btn-danger btn-sm" onclick="deleteContactMsg(${m.id})" title="Delete">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+async function markContactRead(id) {
+  try {
+    await API.post(`/api/admin/contact-messages/${id}/read`);
+    const msg = allContactMessages.find(m => m.id === id);
+    if (msg) msg.is_read = 1;
+    filterContactMessages();
+    // Update badge
+    const unread = allContactMessages.filter(m => !m.is_read).length;
+    const badge = document.getElementById('unreadBadge');
+    if (unread > 0) { badge.textContent = unread; badge.style.display = ''; }
+    else { badge.style.display = 'none'; }
+  } catch(e) { toast('Failed to mark as read', 'error'); }
+}
+
+async function deleteContactMsg(id) {
+  if (!confirm('Delete this message?')) return;
+  try {
+    await API.del(`/api/admin/contact-messages/${id}`);
+    allContactMessages = allContactMessages.filter(m => m.id !== id);
+    filterContactMessages();
+    toast('Message deleted', 'success');
+  } catch(e) { toast('Failed to delete message', 'error'); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  FESTIVAL SECTION
+// ═══════════════════════════════════════════════════════
+let festivalData = { product_ids: [], products: [] };
+let allProductsCache = [];
+
+async function loadFestival() {
+  // Step 1: Load festival settings
+  try {
+    festivalData = await API.get('/api/admin/festival');
+    document.getElementById('festName').value        = festivalData.name         || '';
+    document.getElementById('festEmoji').value       = festivalData.emoji        || '';
+    document.getElementById('festOfferText').value   = festivalData.offer_text   || '';
+    document.getElementById('festSubText').value     = festivalData.sub_text     || '';
+    document.getElementById('festActive').checked    = !!festivalData.active;
+    document.getElementById('festBannerImage').value = festivalData.banner_image || '';
+    _updateFestBannerPreview(festivalData.banner_image || '');
+    const tag = document.getElementById('festLiveTag');
+    if (tag) tag.style.display = festivalData.active ? '' : 'none';
+    renderSelectedProducts();
+  } catch(e) {
+    toast('Failed to load festival settings', 'error');
+  }
+
+  // Step 2: Load product cache separately so one failure doesn't block the other
+  try {
+    if (!allProductsCache.length) {
+      allProductsCache = await API.get('/api/admin/products');
+    }
+  } catch(e) {
+    toast('Failed to load product list for search', 'error');
+  }
+}
+
+async function saveFestivalSettings() {
+  const btn = document.getElementById('festSaveBtn');
+  btn.innerHTML = '<span class="spinner"></span> Saving...';
+  btn.disabled = true;
+  try {
+    const d = await API.put('/api/admin/festival', {
+      name:         document.getElementById('festName').value.trim(),
+      emoji:        document.getElementById('festEmoji').value.trim(),
+      offer_text:   document.getElementById('festOfferText').value.trim(),
+      sub_text:     document.getElementById('festSubText').value.trim(),
+      active:       document.getElementById('festActive').checked,
+      banner_image: document.getElementById('festBannerImage').value.trim(),
+      product_ids:  festivalData.product_ids,
+    });
+    festivalData = {...festivalData, ...d.festival};
+    const tag = document.getElementById('festLiveTag');
+    if (tag) tag.style.display = d.festival.active ? '' : 'none';
+    toast(d.festival.active ? 'Festival section is now LIVE ✅' : 'Festival section saved (hidden)', 'success');
+  } catch(e) { toast('Failed to save festival settings', 'error'); }
+  btn.innerHTML = '💾 Save Settings';
+  btn.disabled = false;
+}
+
+async function uploadFestBanner(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const label = document.getElementById('festBannerUploadLabel');
+  label.textContent = '⏳ Uploading...';
+  label.classList.add('img-uploading');
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    const r = await fetch('/api/admin/upload-image', { method: 'POST', body: formData });
+    const d = await r.json();
+    if (d.url) {
+      document.getElementById('festBannerImage').value = d.url;
+      _updateFestBannerPreview(d.url);
+      toast('Banner image uploaded ✅', 'success');
+    } else {
+      toast(d.error || 'Upload failed', 'error');
+    }
+  } catch(e) { toast('Upload failed', 'error'); }
+  label.textContent = '📁 Upload';
+  label.classList.remove('img-uploading');
+  input.value = '';
+}
+
+function clearFestBanner() {
+  document.getElementById('festBannerImage').value = '';
+  _updateFestBannerPreview('');
+}
+
+function _updateFestBannerPreview(url) {
+  const wrap = document.getElementById('festBannerPreview');
+  const img  = document.getElementById('festBannerPreviewImg');
+  if (url) {
+    img.src = url;
+    wrap.style.display = 'inline-block';
+  } else {
+    wrap.style.display = 'none';
+    img.src = '';
+  }
+}
+
+function addFestProduct(pid) {
+  pid = parseInt(pid);
+  if (!festivalData.product_ids.includes(pid)) {
+    festivalData.product_ids.push(pid);
+    // Find product in cache and add to products list
+    const p = allProductsCache.find(x => x.id === pid);
+    if (p && !festivalData.products.find(x => x.id === pid)) {
+      festivalData.products.push(p);
+    }
+    saveFestProductIds();
+    renderSelectedProducts();
+    searchFestProducts(); // refresh search to update button states
+  }
+}
+
+function removeFestProduct(pid) {
+  pid = parseInt(pid);
+  festivalData.product_ids = festivalData.product_ids.filter(id => id !== pid);
+  festivalData.products = festivalData.products.filter(p => p.id !== pid);
+  saveFestProductIds();
+  renderSelectedProducts();
+  searchFestProducts();
+}
+
+async function saveFestProductIds() {
+  try {
+    await API.put('/api/admin/festival', { product_ids: festivalData.product_ids });
+  } catch(e) { toast('Failed to save product list', 'error'); }
+}
+
+function renderSelectedProducts() {
+  const el = document.getElementById('festSelectedProducts');
+  const products = festivalData.products || [];
+  if (!products.length) {
+    el.innerHTML = '<p style="font-size:.8rem;color:var(--dg)">No products selected yet. Search and add products on the left.</p>';
+    return;
+  }
+  el.innerHTML = products.map(p => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:var(--rd);border:1px solid var(--border)">
+      <img src="${p.image_url||''}" onerror="this.src='https://via.placeholder.com/36/1e2435/ff4f8b?text=?'"
+           style="width:36px;height:36px;object-fit:cover;border-radius:6px;flex-shrink:0">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</div>
+        <div style="font-size:.73rem;color:var(--dg)">₹${p.price}${p.discount?` · ${p.discount}% off`:''}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="removeFestProduct(${p.id})" title="Remove">✕</button>
+    </div>`).join('');
+}
+
+function searchFestProducts() {
+  const q = document.getElementById('festProdSearch').value.trim().toLowerCase();
+  const el = document.getElementById('festProdResults');
+  if (!q) {
+    el.innerHTML = '<p style="font-size:.8rem;color:var(--dg)">Start typing to search products...</p>';
+    return;
+  }
+  const matches = allProductsCache.filter(p =>
+    p.active !== false && (p.name.toLowerCase().includes(q) || (p.category||'').toLowerCase().includes(q))
+  ).slice(0, 8);
+  if (!matches.length) {
+    el.innerHTML = '<p style="font-size:.8rem;color:var(--dg)">No products found.</p>';
+    return;
+  }
+  el.innerHTML = matches.map(p => {
+    const added = festivalData.product_ids.includes(p.id);
+    return `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:var(--rd);border:1px solid ${added?'var(--ac)':'var(--border)'}">
+      <img src="${p.image_url||''}" onerror="this.src='https://via.placeholder.com/32/1e2435/ff4f8b?text=?'"
+           style="width:32px;height:32px;object-fit:cover;border-radius:5px;flex-shrink:0">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</div>
+        <div style="font-size:.72rem;color:var(--dg)">₹${p.price} · ${p.category||'—'}</div>
+      </div>
+      ${added
+        ? '<span style="font-size:.7rem;color:var(--ac);font-weight:700;white-space:nowrap">✓ Added</span>'
+        : `<button class="btn btn-ghost btn-sm" onclick="addFestProduct(${p.id})" style="white-space:nowrap">＋ Add</button>`}
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+//  SITE CONTENT
+// ═══════════════════════════════════════════════════════
+const SC_FIELDS = [
+  'marquee_text',
+  'hero_badge','hero_title','hero_subtitle','hero_image',
+  'stat1_val','stat1_label','stat2_val','stat2_label',
+  'stat3_val','stat3_label','stat4_val','stat4_label',
+  'section_bestsellers_tag','section_bestsellers_title',
+  'section_festival_title','section_festival_sub',
+  'section_mostliked_tag','section_mostliked_title',
+  'about_story_sub','about_title','about_para1','about_para2','about_para3','about_image',
+  'contact_whatsapp','contact_email','contact_instagram','contact_hours',
+  'footer_desc','footer_copyright'
+];
+
+async function loadSiteContent() {
+  try {
+    const d = await API.get('/api/admin/site-content');
+    SC_FIELDS.forEach(k => {
+      const el = document.getElementById('sc_' + k);
+      if (el) el.value = d[k] || '';
+    });
+  } catch(e) { toast('Failed to load site content','error'); }
+}
+
+async function saveSiteContent() {
+  const btn = document.getElementById('scSaveBtn');
+  btn.innerHTML = '<span class="spinner"></span> Saving...';
+  btn.disabled = true;
+  const body = {};
+  SC_FIELDS.forEach(k => {
+    const el = document.getElementById('sc_' + k);
+    if (el) body[k] = el.value.trim();
+  });
+  try {
+    await API.put('/api/admin/site-content', body);
+    toast('Site content saved! Changes are live ✅','success');
+  } catch(e) { toast('Failed to save content','error'); }
+  btn.innerHTML = '💾 Save Changes';
+  btn.disabled = false;
+}
+
+// ═══════════════════════════════════════════════════════
+//  CATEGORIES
+// ═══════════════════════════════════════════════════════
+let adminCategories = [];
+
+async function loadCategories() {
+  document.getElementById('categoriesList').innerHTML = '<div class="loading-state"><div class="spinner big-spin"></div></div>';
+  try {
+    adminCategories = await API.get('/api/admin/categories');
+    renderCategoriesList();
+    populateCategoryDropdown();
+  } catch(e) { toast('Failed to load categories','error'); }
+}
+
+function renderCategoriesList() {
+  const el = document.getElementById('categoriesList');
+  if (!adminCategories.length) {
+    el.innerHTML = '<p style="color:var(--dg);font-size:.85rem">No categories yet. Add one above.</p>';
+    return;
+  }
+  el.innerHTML = adminCategories.map(cat => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border-radius:var(--rd);margin-bottom:8px;border:1px solid var(--border)">
+      <span style="font-size:.88rem;font-weight:600">🗂 ${cat}</span>
+      <button class="btn btn-danger btn-sm" onclick="deleteCategory('${cat.replace(/'/g,"\'")}')" title="Delete category">🗑</button>
+    </div>`).join('');
+}
+
+function populateCategoryDropdown(selectedVal) {
+  const sel = document.getElementById('pCategory');
+  if (!sel) return;
+  const current = selectedVal || sel.value;
+  sel.innerHTML = '<option value="">Select category</option>' +
+    adminCategories.map(c => `<option${c===current?' selected':''}>${c}</option>`).join('');
+}
+
+async function addCategory() {
+  const inp = document.getElementById('newCatInput');
+  const err = document.getElementById('newCatErr');
+  const name = inp.value.trim();
+  err.style.display = 'none';
+  if (!name) { err.textContent='Category name is required'; err.style.display='block'; return; }
+  try {
+    const d = await API.post('/api/admin/categories', {name});
+    if (d.error) { err.textContent=d.error; err.style.display='block'; return; }
+    adminCategories = d.categories;
+    inp.value = '';
+    renderCategoriesList();
+    populateCategoryDropdown();
+    toast(`Category "${name}" added ✅`,'success');
+  } catch(e) { err.textContent='Failed to add category'; err.style.display='block'; }
+}
+
+async function deleteCategory(name) {
+  if (!confirm(`Delete category "${name}"? Products using it will keep their existing category.`)) return;
+  try {
+    const d = await API.del(`/api/admin/categories/${encodeURIComponent(name)}`);
+    if (d.error) { toast(d.error,'error'); return; }
+    adminCategories = d.categories;
+    renderCategoriesList();
+    populateCategoryDropdown();
+    toast(`Category "${name}" deleted`,'info');
+  } catch(e) { toast('Failed to delete category','error'); }
+}
+
+// ═══════════════════════════════════════════════════════
 //  MODAL HELPERS
 // ═══════════════════════════════════════════════════════
 function openModal(id) { document.getElementById(id).classList.add('open'); }
@@ -1569,6 +2256,7 @@ function escHtml(s) { return (s||'').replace(/['"]/g,''); }
 //  INIT
 // ═══════════════════════════════════════════════════════
 checkAdminSession();
+loadCategories();
 </script>
 </body>
 </html>

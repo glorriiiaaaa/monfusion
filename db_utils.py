@@ -50,7 +50,7 @@ def init_db():
     CREATE TABLE IF NOT EXISTS reviews(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         product_id INTEGER, user_id INTEGER, user_name TEXT,
-        rating INTEGER, comment TEXT,
+        rating INTEGER, comment TEXT, images TEXT,
         created_at TEXT DEFAULT(datetime('now'))
     );
     CREATE TABLE IF NOT EXISTS wishlist(
@@ -72,7 +72,45 @@ def init_db():
         key TEXT PRIMARY KEY, value TEXT,
         updated_at TEXT DEFAULT(datetime('now'))
     );
+    CREATE TABLE IF NOT EXISTS contact_messages(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL, email TEXT NOT NULL,
+        subject TEXT, message TEXT NOT NULL,
+        is_read INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT(datetime('now'))
+    );
+    CREATE TABLE IF NOT EXISTS password_reset_tokens(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        token TEXT UNIQUE NOT NULL,
+        expires_at TEXT NOT NULL,
+        used INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT(datetime('now'))
+    );
     """)
+    # Migrate existing reviews table — add images column if missing
+    try:
+        c.execute("ALTER TABLE reviews ADD COLUMN images TEXT")
+        c.commit()
+    except Exception:
+        pass  # Column already exists
+
+    # Migrate contact_messages table — add phone column if missing
+    try:
+        c.execute("ALTER TABLE contact_messages ADD COLUMN phone TEXT")
+        c.commit()
+    except Exception:
+        pass  # Column already exists
+
+    # Migrate users table — add address columns if missing
+    for col in ['address_house TEXT', 'address_area TEXT', 'address_city TEXT',
+                'address_state TEXT', 'address_pin TEXT', 'address_category TEXT']:
+        try:
+            c.execute(f"ALTER TABLE users ADD COLUMN {col}")
+            c.commit()
+        except Exception:
+            pass  # Column already exists
+
     if not c.execute("SELECT COUNT(*) FROM products").fetchone()[0]:
         _seed_products(c)
     if not c.execute("SELECT COUNT(*) FROM coupons").fetchone()[0]:
@@ -181,4 +219,3 @@ def hp(pw):
 def gen_oid():
     n = random.randint(1,999999)
     return f"MF-{n:06d}"
-
