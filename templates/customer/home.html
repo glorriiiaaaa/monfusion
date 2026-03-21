@@ -1,0 +1,205 @@
+<div class="page active" id="page-home">
+
+  <!-- Marquee -->
+  <div class="marquee-bar">
+    <span class="marquee-inner" id="marqueeText">🎁 FREE DELIVERY ABOVE ₹499 &nbsp;|&nbsp; ✨ CUSTOM POLAROIDS FROM ₹199 &nbsp;|&nbsp; 💝 COUPLE GIFTS &amp; BIRTHDAY HAMPERS &nbsp;|&nbsp; 🌟 FEST SPECIALS AVAILABLE &nbsp;|&nbsp; 🎀 GIFTS FOR HER &amp; HIM &nbsp;&nbsp;&nbsp;&nbsp;🎁 FREE DELIVERY ABOVE ₹499 &nbsp;|&nbsp; ✨ CUSTOM POLAROIDS FROM ₹199 &nbsp;|&nbsp;</span>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" style="margin-top:0;padding-top:0;min-height:calc(100vh - 72px)">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-content" style="animation:pageIn .7s ease">
+      <div class="hero-badge" id="heroHeroBadge">🌸 India's Most Loved Gift Store</div>
+      <h1 id="heroTitle">Gifts that speak<br><span class="hl">from the heart</span></h1>
+      <p id="heroSubtitle">Discover magical customised gifts — polaroids, albums, frames &amp; more — lovingly crafted for your most special moments.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('products')" style="font-size:.97rem">🛍 Shop Now</button>
+        <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)" style="font-size:.97rem">🎁 Explore Hampers</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>10K+</strong><span>Happy Customers</span></div>
+        <div class="hero-stat"><strong>50+</strong><span>Unique Products</span></div>
+        <div class="hero-stat"><strong>4.9★</strong><span>Average Rating</span></div>
+        <div class="hero-stat"><strong>3–5d</strong><span>Delivery</span></div>
+      </div>
+    </div>
+    <div class="hero-visual" style="animation:pageIn .7s ease .2s both">
+      <img id="heroImage" src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=700" alt="Mons Fusion Gifts" onerror="this.src='https://via.placeholder.com/500x400/fde8f0/ff4f8b?text=Mons+Fusion'">
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item reveal"><h3 id="stat1Val">10K+</h3><p id="stat1Label">Happy Customers</p></div>
+    <div class="stat-item reveal reveal-delay-1"><h3 id="stat2Val">50+</h3><p id="stat2Label">Unique Products</p></div>
+    <div class="stat-item reveal reveal-delay-2"><h3 id="stat3Val">4.9⭐</h3><p id="stat3Label">Average Rating</p></div>
+    <div class="stat-item reveal reveal-delay-3"><h3 id="stat4Val">3–5d</h3><p id="stat4Label">Fast Delivery</p></div>
+  </div>
+
+  <!-- CIRCULAR CATEGORIES -->
+  <div class="cc-section">
+    <div class="sec-head reveal">
+      <span class="tag">Browse by Type</span>
+      <h2>What are you looking for?</h2>
+    </div>
+    <div class="cc-grid">
+      <div class="cc-item reveal reveal-delay-1" onclick="showPage('products');setTimeout(()=>setFilter('category','Polaroids'),200)">
+        <div class="cc-circle">📸</div><span>Polaroids</span>
+      </div>
+      <div class="cc-item reveal reveal-delay-1" onclick="showPage('products');setTimeout(()=>setFilter('category','Albums'),200)">
+        <div class="cc-circle">📔</div><span>Albums</span>
+      </div>
+      <div class="cc-item reveal reveal-delay-2" onclick="showPage('products');setTimeout(()=>setFilter('category','Magazines'),200)">
+        <div class="cc-circle">📖</div><span>Magazines</span>
+      </div>
+      <div class="cc-item reveal reveal-delay-2" onclick="showPage('products');setTimeout(()=>setFilter('category','Keychains'),200)">
+        <div class="cc-circle">🔑</div><span>Keychains</span>
+      </div>
+      <div class="cc-item reveal reveal-delay-3" onclick="showPage('products');setTimeout(()=>setFilter('category','Frames'),200)">
+        <div class="cc-circle">🖼</div><span>Frames</span>
+      </div>
+      <div class="cc-item reveal reveal-delay-3" onclick="showPage('products');setTimeout(()=>setFilter('category','Fridge Magnets'),200)">
+        <div class="cc-circle">🧲</div><span>Fridge Magnets</span>
+      </div>
+      <div class="cc-item reveal reveal-delay-4" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)">
+        <div class="cc-circle">🎁</div><span>Hampers</span>
+      </div>
+      <div class="cc-item reveal reveal-delay-4" onclick="showPage('products');setTimeout(()=>setFilter('category','Room Décor'),200)">
+        <div class="cc-circle">🏡</div><span>Room Décor</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOT CATEGORIES -->
+  <section class="section" style="background:var(--bg)">
+    <div class="sec-head reveal">
+      <span class="tag">Hot Right Now</span>
+      <h2>Shop by Category</h2>
+      <p>Find the perfect gift for every occasion and every person</p>
+    </div>
+    <div class="hc-grid">
+      <div class="hc-card reveal"            onclick="showPage('products');setTimeout(()=>setFilter('category','Room Décor'),200)"><div class="hc-icon">🏡</div><h3>Room Décor</h3><p>Transform any space</p></div>
+      <div class="hc-card reveal reveal-delay-1" onclick="showPage('products');setTimeout(()=>setFilter('gender','her'),200)"><div class="hc-icon">👑</div><h3>Gifts for Her</h3><p>She'll love it</p></div>
+      <div class="hc-card reveal reveal-delay-1" onclick="showPage('products');setTimeout(()=>setFilter('gender','him'),200)"><div class="hc-icon">🎸</div><h3>Gifts for Him</h3><p>Thoughtful picks</p></div>
+      <div class="hc-card reveal reveal-delay-2" onclick="showPage('products');setTimeout(()=>setFilter('gender','friends'),200)"><div class="hc-icon">🤝</div><h3>For Friends</h3><p>BFF approved</p></div>
+      <div class="hc-card reveal reveal-delay-2" onclick="showPage('products');setTimeout(()=>setFilter('gender','parents'),200)"><div class="hc-icon">🧡</div><h3>For Parents</h3><p>Show your love</p></div>
+      <div class="hc-card reveal reveal-delay-3" onclick="showPage('products');setTimeout(()=>setFilter('best_seller','1'),200)"><div class="hc-icon">🔥</div><h3>Best Sellers</h3><p>Customer faves</p></div>
+      <div class="hc-card reveal reveal-delay-3" onclick="showPage('products');setTimeout(()=>setFilter('max_price','199'),200)"><div class="hc-icon">💸</div><h3>Under ₹199</h3><p>Budget picks</p></div>
+      <div class="hc-card reveal reveal-delay-4" onclick="showPage('products');setTimeout(()=>setFilter('max_price','299'),200)"><div class="hc-icon">🏷</div><h3>Under ₹299</h3><p>Great value</p></div>
+      <div class="hc-card reveal reveal-delay-4" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)"><div class="hc-icon">🎀</div><h3>Hampers</h3><p>Complete sets</p></div>
+    </div>
+  </section>
+
+  <!-- BEST SELLERS -->
+  <section class="section white-bg">
+    <div class="sec-head reveal">
+      <span class="tag" id="secBestSellersTag">Most Popular</span>
+      <h2 id="secBestSellersTitle">Best Selling Products</h2>
+      <p>Loved by thousands of happy customers across India</p>
+    </div>
+    <div class="products-grid" id="homeBestSellers">
+      <!-- skeleton -->
+      <div class="skel-card reveal"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div><div class="skeleton skel-line xs"></div></div></div>
+      <div class="skel-card reveal reveal-delay-1"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div><div class="skeleton skel-line xs"></div></div></div>
+      <div class="skel-card reveal reveal-delay-2"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div><div class="skeleton skel-line xs"></div></div></div>
+      <div class="skel-card reveal reveal-delay-3"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div><div class="skeleton skel-line xs"></div></div></div>
+    </div>
+    <div style="text-align:center;margin-top:36px" class="reveal">
+      <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>setFilter('best_seller','1'),200)">View All Best Sellers →</button>
+    </div>
+  </section>
+
+  <!-- FESTIVAL SPECIAL -->
+  <section class="section" style="background:var(--bg);display:none" id="festivalSection">
+
+    <!-- Banner: shows uploaded image if set, else falls back to gradient -->
+    <div id="festBannerWrap" style="border-radius:28px;margin-bottom:36px;overflow:hidden;position:relative">
+      <!-- Gradient fallback (shown when no image) -->
+      <div id="festGradientBanner" style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);padding:52px 48px;text-align:center;position:relative;overflow:hidden;color:#fff">
+        <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,79,139,.3),transparent);border-radius:50%"></div>
+        <div style="position:absolute;bottom:-30px;left:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(227,167,196,.2),transparent);border-radius:50%"></div>
+        <div style="position:relative;z-index:2">
+          <div style="font-size:2.4rem;margin-bottom:12px" id="festBannerEmoji">✨🎆✨</div>
+          <h2 style="font-family:var(--font-serif);font-size:2.4rem;margin-bottom:10px" id="secFestivalTitle">Festival Special Gifts</h2>
+          <p style="opacity:.8;margin-bottom:16px" id="festBannerSub">Birthdays · Anniversaries · Diwali · Christmas · Valentine's Day</p>
+          <div id="festOfferBadge" style="display:none;margin-bottom:20px">
+            <span style="display:inline-block;background:linear-gradient(135deg,#ff4f8b,#e33a7e);color:#fff;font-size:.9rem;font-weight:800;padding:8px 22px;border-radius:99px;letter-spacing:.5px" id="festOfferText"></span>
+          </div>
+        </div>
+      </div>
+      <!-- Uploaded image banner (hidden until image is set) -->
+      <div id="festImageBanner" style="display:none;position:relative">
+        <img id="festBannerImg" src="" alt="Festival Banner" style="width:100%;max-height:380px;object-fit:cover;display:block">
+        <!-- Overlay with text on top of image -->
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 60%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:36px 24px;text-align:center;color:#fff">
+          <div style="font-size:2rem;margin-bottom:8px" id="festBannerEmojiImg">✨🎆✨</div>
+          <h2 style="font-family:var(--font-serif);font-size:2.2rem;margin-bottom:8px;text-shadow:0 2px 8px rgba(0,0,0,.4)" id="secFestivalTitleImg">Festival Special Gifts</h2>
+          <p style="opacity:.9;margin-bottom:12px;text-shadow:0 1px 4px rgba(0,0,0,.4)" id="festBannerSubImg">Birthdays · Anniversaries · Diwali · Christmas</p>
+          <div id="festOfferBadgeImg" style="display:none">
+            <span style="display:inline-block;background:linear-gradient(135deg,#ff4f8b,#e33a7e);color:#fff;font-size:.9rem;font-weight:800;padding:8px 22px;border-radius:99px;letter-spacing:.5px" id="festOfferTextImg"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Special Offer Products (admin-selected) — highlighted -->
+    <div id="festSpecialWrap" style="display:none;margin-bottom:40px">
+      <div class="sec-head reveal">
+        <span class="tag" style="background:linear-gradient(135deg,#ff4f8b,#e33a7e);color:#fff">🎁 Special Offers</span>
+        <h2 id="secFestivalSub">Curated for Every Celebration</h2>
+        <p id="festSpecialOfferLabel" style="display:none;font-weight:700;color:var(--ac)"></p>
+      </div>
+      <div class="products-grid" id="homeFestivalSpecial"></div>
+    </div>
+
+    <!-- All Festival Products (is_festival_special=1, excluding specials above) -->
+    <div id="festAllWrap" style="display:none">
+      <div class="sec-head reveal">
+        <span class="tag">All Festival Picks</span>
+        <h2>More Festival Gifts</h2>
+        <p>Browse our full collection of festive specials</p>
+      </div>
+      <div class="products-grid" id="homeFestival"></div>
+      <div style="text-align:center;margin-top:36px" class="reveal">
+        <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)">View All Festival Gifts →</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- MOST LIKED -->
+  <section class="section white-bg">
+    <div class="sec-head reveal">
+      <span class="tag" id="secMostLikedTag">Community Favourites</span>
+      <h2 id="secMostLikedTitle">Most Liked Products</h2>
+      <p>Voted best by our customers — the most-loved gifts</p>
+    </div>
+    <div class="products-grid" id="homeMostLiked">
+      <div class="skel-card reveal"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+      <div class="skel-card reveal reveal-delay-1"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+      <div class="skel-card reveal reveal-delay-2"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+      <div class="skel-card reveal reveal-delay-3"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+    </div>
+    <div style="text-align:center;margin-top:36px" class="reveal">
+      <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>document.getElementById('sortSel').value='likes',300);setTimeout(applyFilters,400)">View All Liked Products →</button>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="section pink-bg">
+    <div class="sec-head reveal"><h2>Why Choose Mons Fusion?</h2></div>
+    <div class="values-grid">
+      <div class="value-card reveal"><div class="value-icon">🎨</div><h3>Fully Custom</h3><p>Every product personalised just for you</p></div>
+      <div class="value-card reveal reveal-delay-1"><div class="value-icon">💝</div><h3>Made with Love</h3><p>Crafted with genuine care and attention</p></div>
+      <div class="value-card reveal reveal-delay-2"><div class="value-icon">🚀</div><h3>Fast Delivery</h3><p>3–5 business days across India</p></div>
+      <div class="value-card reveal reveal-delay-3"><div class="value-icon">💰</div><h3>Best Prices</h3><p>Premium quality at great prices</p></div>
+    </div>
+  </section>
+
+  <footer id="homeFooter"></footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: PRODUCTS
+════════════════════════════════════════════ -->

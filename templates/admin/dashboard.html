@@ -1,0 +1,36 @@
+      <!-- ══════════════════ DASHBOARD ══════════════════ -->
+      <div class="page active" id="sec-dashboard">
+        <div class="page-head">
+          <div><h2>Dashboard</h2><p>Welcome back! Here's what's happening today.</p></div>
+          <div class="head-actions">
+            <button class="btn btn-primary btn-sm" onclick="refreshDashboard()">🔄 Refresh</button>
+            <button class="btn btn-ghost btn-sm" onclick="showSection('analytics')">View Analytics →</button>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="dashStats">
+          <div class="loading-state" style="grid-column:1/-1;padding:30px"><div class="spinner big-spin"></div></div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-title">📈 Revenue — Last 6 Months</div>
+            <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">📦 Order Status</div>
+            <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card">
+            <div class="chart-title">🔥 Top Products</div>
+            <div id="topProductsList"><div class="loading-state"><div class="spinner big-spin"></div></div></div>
+          </div>
+          <div class="card">
+            <div class="chart-title">🕐 Recent Orders</div>
+            <div id="recentOrdersList"><div class="loading-state"><div class="spinner big-spin"></div></div></div>
+          </div>
+        </div>
+      </div>

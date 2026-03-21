@@ -1,0 +1,71 @@
+<div class="page" id="page-products">
+  <!-- sticky top bar -->
+  <div class="prod-page-top">
+    <div class="search-bar">
+      <span style="color:var(--dg)">🔍</span>
+      <input type="text" id="prodSearch" placeholder="Search products..." oninput="applyFilters()">
+    </div>
+    <select class="sort-sel" id="sortSel" onchange="applyFilters()">
+      <option value="">Sort By</option>
+      <option value="price_asc">Price: Low → High</option>
+      <option value="price_desc">Price: High → Low</option>
+      <option value="likes">Most Liked</option>
+      <option value="best_selling">Best Selling</option>
+      <option value="newest">New Arrivals</option>
+    </select>
+    <button class="btn-ghost btn-sm" onclick="toggleFilter()" id="filterToggleBtn">⚙️ Filters</button>
+    <span style="font-size:.82rem;color:var(--dg)" id="resultsCount"></span>
+  </div>
+
+  <div style="padding:12px 5% 0">
+    <div class="active-filters" id="activeFilters"></div>
+  </div>
+
+  <div class="prod-layout" id="prodLayout">
+    <!-- FILTER PANEL -->
+    <aside class="filter-panel" id="filterPanel">
+      <div class="filter-head">
+        <h3>🔧 Filters</h3>
+        <button class="filter-clear" onclick="clearAllFilters()">Clear All</button>
+      </div>
+      <div class="filter-sec">
+        <h4>Category</h4>
+        <div id="catFilterList">
+          <label class="fopt"><input type="radio" name="fcat" value="" checked onchange="applyFilters()"> All Categories</label>
+        </div>
+      </div>
+      <div class="filter-sec">
+        <h4>For Whom</h4>
+        <label class="fopt"><input type="radio" name="fgnd" value="" checked onchange="applyFilters()"> All</label>
+        <label class="fopt"><input type="radio" name="fgnd" value="her" onchange="applyFilters()"> 👑 For Her</label>
+        <label class="fopt"><input type="radio" name="fgnd" value="him" onchange="applyFilters()"> 🎸 For Him</label>
+        <label class="fopt"><input type="radio" name="fgnd" value="friends" onchange="applyFilters()"> 🤝 For Friends</label>
+        <label class="fopt"><input type="radio" name="fgnd" value="parents" onchange="applyFilters()"> 🧡 For Parents</label>
+      </div>
+      <div class="filter-sec">
+        <h4>Price Range</h4>
+        <div class="price-range">
+          <input type="range" id="maxPriceRange" min="99" max="1999" value="1999" oninput="document.getElementById('maxPriceLabel').textContent=this.value;applyFilters()">
+          <div class="price-labels"><span>₹99</span><span>Up to ₹<span id="maxPriceLabel">1999</span></span></div>
+        </div>
+      </div>
+      <div class="filter-sec">
+        <h4>Special</h4>
+        <label class="fopt"><input type="checkbox" id="fBestSeller" onchange="applyFilters()"> ⭐ Best Sellers Only</label>
+        <label class="fopt"><input type="checkbox" id="fDiscounted" onchange="applyFilters()"> 🏷 Discounted Items</label>
+      </div>
+    </aside>
+
+    <!-- PRODUCTS -->
+    <div>
+      <div class="products-grid" id="productsGrid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+  <footer id="productsFooter"></footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: PRODUCT DETAIL
+════════════════════════════════════════════ -->

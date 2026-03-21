@@ -1,0 +1,33 @@
+      <!-- ══════════════════ ANALYTICS ══════════════════ -->
+      <div class="page" id="sec-analytics">
+        <div class="page-head">
+          <div><h2>Analytics Dashboard</h2><p>Deep insights into your store performance.</p></div>
+          <button class="btn btn-primary btn-sm" onclick="loadAnalytics()">🔄 Refresh</button>
+        </div>
+
+        <div class="stats-grid" id="analyticsStats">
+          <div class="loading-state" style="grid-column:1/-1;padding:30px"><div class="spinner big-spin"></div></div>
+        </div>
+
+        <div class="charts-grid" style="margin-bottom:20px">
+          <div class="chart-card">
+            <div class="chart-title">📊 Monthly Revenue &amp; Orders</div>
+            <div class="chart-wrap" style="height:300px"><canvas id="analyticsChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">🗂 Category Sales</div>
+            <div class="chart-wrap" style="height:300px"><canvas id="categoryChart"></canvas></div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card">
+            <div class="chart-title">🏆 Best Selling Products</div>
+            <div id="analyticsBestProds"></div>
+          </div>
+          <div class="card">
+            <div class="chart-title">📋 Monthly Summary</div>
+            <div id="analyticsMonthlySummary"></div>
+          </div>
+        </div>
+      </div>

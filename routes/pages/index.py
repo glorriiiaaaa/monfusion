@@ -1,23 +1,21 @@
-from flask import Blueprint, session, send_from_directory
+from flask import Blueprint, session, send_from_directory, render_template
 
 pages_bp = Blueprint("pages", __name__)
 
 
 @pages_bp.route("/")
 def customer():
-    return send_from_directory(".", "customer.html")
+    return render_template("customer/base.html")
 
 
 @pages_bp.route("/admin")
 def admin_redirect():
-    if not session.get("admin_logged_in"):
-        return send_from_directory(".", "admin.html")
-    return send_from_directory(".", "admin.html")
+    return render_template("admin/base.html")
 
 
 @pages_bp.route("/admin.html")
 def admin_page():
-    return send_from_directory(".", "admin.html")
+    return render_template("admin/base.html")
 
 
 @pages_bp.route("/api/site-content")

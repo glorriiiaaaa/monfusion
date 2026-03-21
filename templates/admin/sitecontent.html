@@ -1,0 +1,97 @@
+<div class="page" id="sec-sitecontent">
+        <div class="page-head">
+          <div><h2>Site Content</h2><p>Edit the text and images shown on the customer-facing website.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadSiteContent()">🔄 Refresh</button>
+        </div>
+        <div style="max-width:680px;display:flex;flex-direction:column;gap:20px">
+
+          <!-- ANNOUNCEMENT BAR -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">📢 Announcement Bar</h3>
+            <div class="form-group"><label>Scrolling Text</label><input type="text" id="sc_marquee_text" class="form-control" placeholder="e.g. 🎁 FREE DELIVERY ABOVE ₹499 | ✨ CUSTOM POLAROIDS FROM ₹199"></div>
+          </div>
+
+          <!-- HERO -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">🏠 Homepage Hero</h3>
+            <div class="form-group"><label>Badge Text</label><input type="text" id="sc_hero_badge" class="form-control" placeholder="e.g. 🌸 India's Most Loved Gift Store"></div>
+            <div class="form-group"><label>Headline</label><input type="text" id="sc_hero_title" class="form-control" placeholder="e.g. Gifts that speak from the heart"></div>
+            <div class="form-group"><label>Subheadline</label><textarea id="sc_hero_subtitle" class="form-control" rows="2"></textarea></div>
+            <div class="form-group"><label>Hero Image URL</label><input type="text" id="sc_hero_image" class="form-control" placeholder="https://..."></div>
+          </div>
+
+          <!-- STATS -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">📊 Stats (Hero · Stats Bar · About Page)</h3>
+            <div class="form-row">
+              <div class="form-group"><label>Stat 1 Value</label><input type="text" id="sc_stat1_val" class="form-control" placeholder="10K+"></div>
+              <div class="form-group"><label>Stat 1 Label</label><input type="text" id="sc_stat1_label" class="form-control" placeholder="Happy Customers"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Stat 2 Value</label><input type="text" id="sc_stat2_val" class="form-control" placeholder="50+"></div>
+              <div class="form-group"><label>Stat 2 Label</label><input type="text" id="sc_stat2_label" class="form-control" placeholder="Unique Products"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Stat 3 Value</label><input type="text" id="sc_stat3_val" class="form-control" placeholder="4.9★"></div>
+              <div class="form-group"><label>Stat 3 Label</label><input type="text" id="sc_stat3_label" class="form-control" placeholder="Average Rating"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Stat 4 Value</label><input type="text" id="sc_stat4_val" class="form-control" placeholder="3–5d"></div>
+              <div class="form-group"><label>Stat 4 Label</label><input type="text" id="sc_stat4_label" class="form-control" placeholder="Delivery"></div>
+            </div>
+          </div>
+
+          <!-- HOMEPAGE SECTIONS -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">🏷 Homepage Section Headings</h3>
+            <div class="form-row">
+              <div class="form-group"><label>Best Sellers Tag</label><input type="text" id="sc_section_bestsellers_tag" class="form-control" placeholder="Most Popular"></div>
+              <div class="form-group"><label>Best Sellers Title</label><input type="text" id="sc_section_bestsellers_title" class="form-control" placeholder="Best Selling Products"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Festival Banner Title</label><input type="text" id="sc_section_festival_title" class="form-control" placeholder="Festival Special Gifts"></div>
+              <div class="form-group"><label>Festival Section Sub</label><input type="text" id="sc_section_festival_sub" class="form-control" placeholder="Curated for Every Celebration"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Most Liked Tag</label><input type="text" id="sc_section_mostliked_tag" class="form-control" placeholder="Community Favourites"></div>
+              <div class="form-group"><label>Most Liked Title</label><input type="text" id="sc_section_mostliked_title" class="form-control" placeholder="Most Liked Products"></div>
+            </div>
+          </div>
+
+          <!-- ABOUT -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">💫 About Page</h3>
+            <div class="form-group"><label>Story Subheading</label><input type="text" id="sc_about_story_sub" class="form-control" placeholder="Born from a love of meaningful gifting..."></div>
+            <div class="form-group"><label>Section Title</label><input type="text" id="sc_about_title" class="form-control" placeholder="e.g. Turning Moments into Memories"></div>
+            <div class="form-group"><label>Paragraph 1</label><textarea id="sc_about_para1" class="form-control" rows="3"></textarea></div>
+            <div class="form-group"><label>Paragraph 2</label><textarea id="sc_about_para2" class="form-control" rows="3"></textarea></div>
+            <div class="form-group"><label>Paragraph 3</label><textarea id="sc_about_para3" class="form-control" rows="2"></textarea></div>
+            <div class="form-group"><label>About Image URL</label><input type="text" id="sc_about_image" class="form-control" placeholder="https://..."></div>
+          </div>
+
+          <!-- CONTACT INFO -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">📞 Contact Info</h3>
+            <div class="form-row">
+              <div class="form-group"><label>WhatsApp Number</label><input type="text" id="sc_contact_whatsapp" class="form-control" placeholder="+91 98765 43210"></div>
+              <div class="form-group"><label>Email</label><input type="text" id="sc_contact_email" class="form-control" placeholder="hello@monsfusion.com"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Instagram Handle</label><input type="text" id="sc_contact_instagram" class="form-control" placeholder="@monsfusion"></div>
+              <div class="form-group"><label>Working Hours</label><input type="text" id="sc_contact_hours" class="form-control" placeholder="Mon–Sat: 10am – 8pm IST"></div>
+            </div>
+          </div>
+
+          <!-- FOOTER -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">🦶 Footer</h3>
+            <div class="form-group"><label>Brand Description</label><textarea id="sc_footer_desc" class="form-control" rows="2"></textarea></div>
+            <div class="form-group"><label>Copyright Text</label><input type="text" id="sc_footer_copyright" class="form-control" placeholder="© 2024 Mons Fusion. All rights reserved."></div>
+          </div>
+
+          <div style="display:flex;gap:12px;justify-content:flex-end">
+            <button class="btn btn-ghost btn-sm" onclick="loadSiteContent()">↺ Reset</button>
+            <button class="btn btn-primary" onclick="saveSiteContent()" id="scSaveBtn">💾 Save Changes</button>
+          </div>
+        </div>
+      </div>

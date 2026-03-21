@@ -1,0 +1,18 @@
+      <!-- ══════════════════ COUPONS ══════════════════ -->
+      <div class="page" id="sec-coupons">
+        <div class="page-head">
+          <div><h2>Coupon Management</h2><p>Create and manage discount coupons.</p></div>
+          <button class="btn btn-primary" onclick="openCouponModal()">＋ Create Coupon</button>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Code</th><th>Type</th><th>Value</th><th>Free Delivery</th><th>Expiry</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="couponsTbody">
+              <tr><td colspan="7" class="loading-state"><div class="spinner big-spin"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>

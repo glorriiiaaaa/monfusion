@@ -1,0 +1,37 @@
+      <!-- ══════════════════ PRODUCTS ══════════════════ -->
+      <div class="page" id="sec-products">
+        <div class="page-head">
+          <div><h2>Product Management</h2><p>Add, edit, delete and manage all products.</p></div>
+          <button class="btn btn-primary" onclick="openProductModal()">＋ Add Product</button>
+        </div>
+
+        <div class="filter-row">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" id="prodSearch" placeholder="Search products..." oninput="filterProducts()">
+          </div>
+          <select class="filter-sel" id="prodCatFilter" onchange="filterProducts()">
+            <option value="">All Categories</option>
+          </select>
+          <select class="filter-sel" id="prodStatusFilter" onchange="filterProducts()">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <span id="prodCount" style="font-size:.8rem;color:var(--dg);margin-left:4px"></span>
+        </div>
+
+        <div class="tbl-wrap">
+          <table id="productsTable">
+            <thead>
+              <tr>
+                <th>Product</th><th>Category</th><th>Price</th><th>Discount</th>
+                <th>Rating</th><th>Likes</th><th>Flags</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTbody">
+              <tr><td colspan="9" class="loading-state"><div class="spinner big-spin"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>

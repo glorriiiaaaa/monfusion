@@ -1,0 +1,66 @@
+<div class="page" id="page-contact">
+  <div class="page-hero"><h1>Contact Us 📩</h1><p>We'd love to hear from you!</p></div>
+  <div class="contact-grid">
+    <div>
+      <h2 style="font-family:var(--font-serif);font-size:2rem;margin-bottom:20px">Let's connect</h2>
+      <p style="color:var(--dg);line-height:1.8;margin-bottom:28px">Have questions? Want a custom bulk order? Looking for gifting advice? We're always here to help!</p>
+      <div class="contact-info-card">
+        <div class="contact-icon">📱</div>
+        <div><strong style="font-size:.9rem">WhatsApp</strong><br><span id="contactWhatsapp" style="color:var(--dg);font-size:.875rem">+91 98765 43210</span></div>
+      </div>
+      <div class="contact-info-card">
+        <div class="contact-icon">📧</div>
+        <div><strong style="font-size:.9rem">Email</strong><br><span id="contactEmail" style="color:var(--dg);font-size:.875rem">hello@monsfusion.com</span></div>
+      </div>
+      <div class="contact-info-card">
+        <div class="contact-icon">📸</div>
+        <div><strong style="font-size:.9rem">Instagram</strong><br><span id="contactInstagram" style="color:var(--dg);font-size:.875rem">@monsfusion</span></div>
+      </div>
+      <div class="contact-info-card">
+        <div class="contact-icon">⏰</div>
+        <div><strong style="font-size:.9rem">Working Hours</strong><br><span id="contactHours" style="color:var(--dg);font-size:.875rem">Mon–Sat: 10am – 8pm IST</span></div>
+      </div>
+    </div>
+    <div class="contact-form-wrap">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:22px">Send us a Message</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name *</label>
+          <input type="text" id="ctName" class="form-control" placeholder="Full name">
+          <span class="form-error" id="ctName-e">Enter a valid name</span>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="ctEmail" class="form-control" placeholder="your@email.com">
+          <span class="form-error" id="ctEmail-e">Enter a valid email</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Phone Number <span style="color:var(--dg);font-size:.78rem;font-weight:400">(optional)</span></label>
+        <input type="tel" id="ctPhone" class="form-control" placeholder="10-digit mobile number" maxlength="10">
+        <span class="form-error" id="ctPhone-e">Must be 10 digits and start with 6–9</span>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <select class="form-control" id="ctSub">
+          <option>General Inquiry</option>
+          <option>Custom Order</option>
+          <option>Bulk Order</option>
+          <option>Order Support</option>
+          <option>Feedback</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message *</label>
+        <textarea class="form-control" id="ctMsg" rows="5" placeholder="Tell us how we can help..."></textarea>
+        <span class="form-error" id="ctMsg-e">Message is required</span>
+      </div>
+      <button class="btn-primary" onclick="sendContact()" style="width:100%;justify-content:center" id="ctBtn">Send Message 📩</button>
+    </div>
+  </div>
+  <footer id="contactFooter"></footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: FAQ
+════════════════════════════════════════════ -->

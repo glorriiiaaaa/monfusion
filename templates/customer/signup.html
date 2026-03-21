@@ -1,0 +1,43 @@
+<div class="page" id="page-signup">
+  <div class="auth-page">
+    <div class="auth-card" style="max-width:500px">
+      <div class="auth-logo">🎁 Join Us</div>
+      <div class="auth-sub">Create your Mons Fusion account</div>
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="suName" class="form-control" placeholder="Your full name" oninput="validateField(this,'name')">
+        <span class="form-error" id="suName-e">Name must be at least 3 characters</span>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="suEmail" class="form-control" placeholder="your@email.com" oninput="validateField(this,'email')">
+          <span class="form-error" id="suEmail-e">Enter a valid email</span>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" id="suPhone" class="form-control" placeholder="10-digit number" maxlength="10" oninput="validateField(this,'phone')">
+          <span class="form-error" id="suPhone-e">Must be 10 digits</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" id="suPw" class="form-control" placeholder="Min. 8 characters" oninput="validateField(this,'password')">
+        <span class="form-error" id="suPw-e">Password must be at least 8 characters</span>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password *</label>
+        <input type="password" id="suCpw" class="form-control" placeholder="Re-enter password" oninput="validateField(this,'notempty')">
+        <span class="form-error" id="suCpw-e">Passwords do not match</span>
+      </div>
+      <span class="form-error" id="suGenErr" style="display:block;font-size:.88rem;text-align:center;margin-bottom:12px"></span>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:14px" id="signupBtn" onclick="doSignup()">Create Account</button>
+      <div class="auth-switch">Already have an account? <button onclick="showPage('login')">Sign In</button></div>
+    </div>
+  </div>
+  <footer id="signupFooter"></footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: ABOUT
+════════════════════════════════════════════ -->

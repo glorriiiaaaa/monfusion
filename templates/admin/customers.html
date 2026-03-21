@@ -1,0 +1,25 @@
+      <!-- ══════════════════ CUSTOMERS ══════════════════ -->
+      <div class="page" id="sec-customers">
+        <div class="page-head">
+          <div><h2>Customers</h2><p>View all registered customers and their activity.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadCustomers()">🔄 Refresh</button>
+        </div>
+
+        <div class="filter-row">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" id="custSearch" placeholder="Search customers..." oninput="filterCustomers()">
+          </div>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Total Spent</th><th>Joined</th></tr>
+            </thead>
+            <tbody id="customersTbody">
+              <tr><td colspan="7" class="loading-state"><div class="spinner big-spin"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>

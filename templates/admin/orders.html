@@ -1,0 +1,38 @@
+      <!-- ══════════════════ ORDERS ══════════════════ -->
+      <div class="page" id="sec-orders">
+        <div class="page-head">
+          <div><h2>Order Management</h2><p>View and manage all customer orders.</p></div>
+          <div class="head-actions">
+            <select class="filter-sel" id="orderStatusFilter" onchange="loadOrders()">
+              <option value="">All Orders</option>
+              <option value="pending">Pending</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" onclick="loadOrders()">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" id="orderSearch" placeholder="Search by Order ID or customer..." oninput="filterOrders()">
+          </div>
+          <div id="orderSummaryBadges" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+
+        <div class="tbl-wrap">
+          <table id="ordersTable">
+            <thead>
+              <tr>
+                <th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th>
+                <th>Payment</th><th>Status</th><th>Date</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTbody">
+              <tr><td colspan="8" class="loading-state"><div class="spinner big-spin"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>

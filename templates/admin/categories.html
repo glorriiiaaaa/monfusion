@@ -1,0 +1,23 @@
+      <!-- ══════════════════ CATEGORIES ══════════════════ -->
+      <div class="page" id="sec-categories">
+        <div class="page-head">
+          <div><h2>Product Categories</h2><p>Add or remove product categories. Changes apply site-wide.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadCategories()">🔄 Refresh</button>
+        </div>
+        <div style="max-width:480px">
+          <div class="card" style="padding:24px;margin-bottom:20px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:16px">➕ Add New Category</h3>
+            <div style="display:flex;gap:10px">
+              <input type="text" id="newCatInput" class="form-control" placeholder="e.g. Stickers" onkeydown="if(event.key==='Enter')addCategory()">
+              <button class="btn btn-primary btn-sm" onclick="addCategory()">Add</button>
+            </div>
+            <span id="newCatErr" style="font-size:.78rem;color:var(--red);display:none;margin-top:6px;display:block"></span>
+          </div>
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:16px">📋 Existing Categories</h3>
+            <div id="categoriesList"><div class="loading-state"><div class="spinner big-spin"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════ SITE CONTENT ══════════════════ -->

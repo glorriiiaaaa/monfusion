@@ -1,0 +1,30 @@
+      <!-- ══════════════════ CONTACT MESSAGES ══════════════════ -->
+      <div class="page" id="sec-contact">
+        <div class="page-head">
+          <div><h2>Contact Messages</h2><p>Customer enquiries submitted via the contact form.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadContactMessages()">🔄 Refresh</button>
+        </div>
+
+        <div class="filter-row">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" id="contactSearch" placeholder="Search messages..." oninput="filterContactMessages()">
+          </div>
+          <select class="form-control" id="contactFilter" onchange="filterContactMessages()" style="width:auto;padding:8px 12px">
+            <option value="all">All Messages</option>
+            <option value="unread">Unread Only</option>
+            <option value="read">Read Only</option>
+          </select>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Subject</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="contactTbody">
+              <tr><td colspan="9" class="loading-state"><div class="spinner big-spin"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>

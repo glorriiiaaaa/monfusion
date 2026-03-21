@@ -1,0 +1,77 @@
+      <!-- ══════════════════ FESTIVAL SECTION ══════════════════ -->
+      <div class="page" id="sec-festival">
+        <div class="page-head">
+          <div><h2>Festival Section</h2><p>Control the festive gift section shown on the homepage.</p></div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span id="festLiveTag" style="display:none;font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:99px;background:rgba(0,214,143,.15);color:var(--green)">● LIVE</span>
+            <button class="btn btn-ghost btn-sm" onclick="loadFestival()">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px">
+
+          <!-- Settings Card -->
+          <div class="card" style="padding:24px;grid-column:1/-1">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">⚙️ Festival Settings</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Festival Name</label>
+                <input type="text" id="festName" class="form-control" placeholder="e.g. Diwali Special, Christmas Gifts">
+              </div>
+              <div class="form-group">
+                <label>Emoji / Icon</label>
+                <input type="text" id="festEmoji" class="form-control" placeholder="e.g. ✨🎆✨ or 🪔🎁🪔">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Offer Text <span style="color:var(--dg);font-weight:400;font-size:.75rem">(optional — shown as a badge)</span></label>
+              <input type="text" id="festOfferText" class="form-control" placeholder="e.g. Flat 20% Off · Free Delivery · Buy 2 Get 1">
+            </div>
+            <div class="form-group">
+              <label>Subtext / Occasions</label>
+              <input type="text" id="festSubText" class="form-control" placeholder="e.g. Birthdays · Anniversaries · Diwali · Christmas">
+            </div>
+            <div class="form-group">
+              <label>Banner Image <span style="color:var(--dg);font-weight:400;font-size:.75rem">(optional — replaces the dark gradient banner)</span></label>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <input type="text" id="festBannerImage" class="form-control" placeholder="Paste image URL or upload a file" style="flex:1;min-width:200px">
+                <input type="file" id="festBannerFileInput" class="img-upload-input" accept="image/png,image/jpeg,image/gif,image/webp" onchange="uploadFestBanner(this)">
+                <label for="festBannerFileInput" class="img-upload-label" id="festBannerUploadLabel">📁 Upload</label>
+              </div>
+              <div id="festBannerPreview" style="display:none;margin-top:10px;position:relative;display:inline-block">
+                <img id="festBannerPreviewImg" src="" alt="Banner preview" style="max-height:120px;max-width:100%;border-radius:10px;border:1.5px solid var(--border);object-fit:cover">
+                <button onclick="clearFestBanner()" style="position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--danger);color:#fff;border:none;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.88rem;font-weight:600">
+                <input type="checkbox" id="festActive" style="width:16px;height:16px;cursor:pointer">
+                Show this section on homepage (make it live)
+              </label>
+              <button class="btn btn-primary" onclick="saveFestivalSettings()" id="festSaveBtn">💾 Save Settings</button>
+            </div>
+          </div>
+
+          <!-- Product Picker -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px">➕ Add Products</h3>
+            <p style="font-size:.75rem;color:var(--dg);margin-bottom:14px">Search and add products to this festival section</p>
+            <div style="display:flex;gap:8px;margin-bottom:14px">
+              <input type="text" id="festProdSearch" class="form-control" placeholder="Search product name..." oninput="searchFestProducts()">
+            </div>
+            <div id="festProdResults" style="max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:6px">
+              <p style="font-size:.8rem;color:var(--dg)">Start typing to search products...</p>
+            </div>
+          </div>
+
+          <!-- Selected Products -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:6px">🎁 Selected Products</h3>
+            <p style="font-size:.75rem;color:var(--dg);margin-bottom:14px">Products shown in the festival section</p>
+            <div id="festSelectedProducts" style="display:flex;flex-direction:column;gap:8px">
+              <p style="font-size:.8rem;color:var(--dg)">No products selected yet.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
