@@ -89,13 +89,19 @@ def api_product(pid):
         pd["images"] = json.loads(pd["images"]) if pd["images"] else [pd["image_url"]]
     except Exception:
         pd["images"] = [pd["image_url"]]
-    pd["reviews"] = [
-        dict(r)
-        for r in c.execute(
-            "SELECT * FROM reviews WHERE product_id=? ORDER BY created_at DESC",
-            (pid,),
-        ).fetchall()
-    ]
+    raw_reviews = c.execute(
+        "SELECT * FROM reviews WHERE product_id=? ORDER BY created_at DESC",
+        (pid,),
+    ).fetchall()
+    parsed_reviews = []
+    for r in raw_reviews:
+        rv = dict(r)
+        try:
+            rv["images"] = json.loads(rv["images"]) if rv.get("images") else []
+        except Exception:
+            rv["images"] = []
+        parsed_reviews.append(rv)
+    pd["reviews"] = parsed_reviews
     rel = [
         dict(r)
         for r in c.execute(
@@ -126,7 +132,20 @@ def api_like(pid):
 
 @bp.route("/api/categories")
 def api_cats():
+    import json
     c = db()
+    # Prefer categories stored by admin in site_settings
+    row = c.execute(
+        "SELECT value FROM site_settings WHERE key='product_categories'"
+    ).fetchone()
+    if row:
+        try:
+            cats = json.loads(row["value"])
+            c.close()
+            return jsonify(cats)
+        except Exception:
+            pass
+    # Fallback: derive from active products
     cats = [
         r[0]
         for r in c.execute(

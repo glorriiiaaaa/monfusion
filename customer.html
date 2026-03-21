@@ -290,6 +290,7 @@ ul { list-style: none; }
 .form-control:focus { border-color: var(--pk); box-shadow: 0 0 0 3px rgba(227,167,196,.2); }
 .form-control.valid { border-color: #00c853; }
 .form-control.invalid { border-color: #ff1744; }
+select.form-control { appearance: auto; cursor: pointer; }
 .form-error {
   font-size: .75rem; color: #ff1744; margin-top: 5px;
   display: none; animation: slideErr .2s ease;
@@ -626,6 +627,16 @@ ul { list-style: none; }
 .rv-author { font-weight: 600; font-size: .88rem; }
 .rv-date { font-size: .73rem; color: var(--dg); }
 .rv-text { font-size: .875rem; color: var(--dg); line-height: 1.65; }
+.rv-images { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.rv-img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); transition: transform .15s; }
+.rv-img:hover { transform: scale(1.06); }
+.review-img-input { display: none; }
+.review-img-label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: .82rem; color: var(--ac); font-weight: 600; padding: 6px 12px; border: 1.5px dashed var(--ac); border-radius: 8px; margin-top: 4px; transition: background .15s; }
+.review-img-label:hover { background: rgba(255,79,139,.07); }
+.review-img-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.rip-thumb { position: relative; width: 60px; height: 60px; }
+.rip-thumb img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+.rip-rm { position: absolute; top: -5px; right: -5px; background: #ff1744; color: #fff; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: .65rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .star-pick { display: flex; gap: 4px; }
 .star-pick span { font-size: 1.6rem; cursor: pointer; color: #ddd; transition: color .15s; }
 .star-pick span.lit, .star-pick span:hover { color: #FFB800; }
@@ -1065,6 +1076,7 @@ footer {
     <button class="nav-icon" onclick="showPage('cart')" title="Cart" style="position:relative">
       🛍<span class="nav-badge" id="cartBadge">0</span>
     </button>
+    <button class="nav-icon" id="navLogoutBtn" onclick="doLogout()" title="Logout" style="display:none;color:#ff1744">🚪</button>
   </div>
   <button class="hamburger" id="hamburger" onclick="toggleMobMenu()" aria-label="Menu">☰</button>
 </nav>
@@ -1089,7 +1101,7 @@ footer {
 
   <!-- Marquee -->
   <div class="marquee-bar">
-    <span class="marquee-inner">🎁 FREE DELIVERY ABOVE ₹499 &nbsp;|&nbsp; ✨ CUSTOM POLAROIDS FROM ₹199 &nbsp;|&nbsp; 💝 COUPLE GIFTS &amp; BIRTHDAY HAMPERS &nbsp;|&nbsp; 🌟 FEST SPECIALS AVAILABLE &nbsp;|&nbsp; 🎀 GIFTS FOR HER &amp; HIM &nbsp;&nbsp;&nbsp;&nbsp;🎁 FREE DELIVERY ABOVE ₹499 &nbsp;|&nbsp; ✨ CUSTOM POLAROIDS FROM ₹199 &nbsp;|&nbsp;</span>
+    <span class="marquee-inner" id="marqueeText">🎁 FREE DELIVERY ABOVE ₹499 &nbsp;|&nbsp; ✨ CUSTOM POLAROIDS FROM ₹199 &nbsp;|&nbsp; 💝 COUPLE GIFTS &amp; BIRTHDAY HAMPERS &nbsp;|&nbsp; 🌟 FEST SPECIALS AVAILABLE &nbsp;|&nbsp; 🎀 GIFTS FOR HER &amp; HIM &nbsp;&nbsp;&nbsp;&nbsp;🎁 FREE DELIVERY ABOVE ₹499 &nbsp;|&nbsp; ✨ CUSTOM POLAROIDS FROM ₹199 &nbsp;|&nbsp;</span>
   </div>
 
   <!-- HERO -->
@@ -1097,9 +1109,9 @@ footer {
     <div class="hero-blob hero-blob-1"></div>
     <div class="hero-blob hero-blob-2"></div>
     <div class="hero-content" style="animation:pageIn .7s ease">
-      <div class="hero-badge">🌸 India's Most Loved Gift Store</div>
-      <h1>Gifts that speak<br><span class="hl">from the heart</span></h1>
-      <p>Discover magical customised gifts — polaroids, albums, frames &amp; more — lovingly crafted for your most special moments.</p>
+      <div class="hero-badge" id="heroHeroBadge">🌸 India's Most Loved Gift Store</div>
+      <h1 id="heroTitle">Gifts that speak<br><span class="hl">from the heart</span></h1>
+      <p id="heroSubtitle">Discover magical customised gifts — polaroids, albums, frames &amp; more — lovingly crafted for your most special moments.</p>
       <div class="hero-btns">
         <button class="btn-primary" onclick="showPage('products')" style="font-size:.97rem">🛍 Shop Now</button>
         <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)" style="font-size:.97rem">🎁 Explore Hampers</button>
@@ -1112,16 +1124,16 @@ footer {
       </div>
     </div>
     <div class="hero-visual" style="animation:pageIn .7s ease .2s both">
-      <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=700" alt="Mons Fusion Gifts" onerror="this.src='https://via.placeholder.com/500x400/fde8f0/ff4f8b?text=Mons+Fusion'">
+      <img id="heroImage" src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=700" alt="Mons Fusion Gifts" onerror="this.src='https://via.placeholder.com/500x400/fde8f0/ff4f8b?text=Mons+Fusion'">
     </div>
   </section>
 
   <!-- STATS BAR -->
   <div class="stats-bar">
-    <div class="stat-item reveal"><h3>10K+</h3><p>Happy Customers</p></div>
-    <div class="stat-item reveal reveal-delay-1"><h3>50+</h3><p>Unique Products</p></div>
-    <div class="stat-item reveal reveal-delay-2"><h3>4.9⭐</h3><p>Average Rating</p></div>
-    <div class="stat-item reveal reveal-delay-3"><h3>3–5d</h3><p>Fast Delivery</p></div>
+    <div class="stat-item reveal"><h3 id="stat1Val">10K+</h3><p id="stat1Label">Happy Customers</p></div>
+    <div class="stat-item reveal reveal-delay-1"><h3 id="stat2Val">50+</h3><p id="stat2Label">Unique Products</p></div>
+    <div class="stat-item reveal reveal-delay-2"><h3 id="stat3Val">4.9⭐</h3><p id="stat3Label">Average Rating</p></div>
+    <div class="stat-item reveal reveal-delay-3"><h3 id="stat4Val">3–5d</h3><p id="stat4Label">Fast Delivery</p></div>
   </div>
 
   <!-- CIRCULAR CATEGORIES -->
@@ -1181,8 +1193,8 @@ footer {
   <!-- BEST SELLERS -->
   <section class="section white-bg">
     <div class="sec-head reveal">
-      <span class="tag">Most Popular</span>
-      <h2>Best Selling Products</h2>
+      <span class="tag" id="secBestSellersTag">Most Popular</span>
+      <h2 id="secBestSellersTitle">Best Selling Products</h2>
       <p>Loved by thousands of happy customers across India</p>
     </div>
     <div class="products-grid" id="homeBestSellers">
@@ -1198,31 +1210,68 @@ footer {
   </section>
 
   <!-- FESTIVAL SPECIAL -->
-  <section class="section" style="background:var(--bg)">
-    <div style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:28px;padding:52px 48px;margin-bottom:36px;text-align:center;position:relative;overflow:hidden;color:#fff">
-      <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,79,139,.3),transparent);border-radius:50%"></div>
-      <div style="position:absolute;bottom:-30px;left:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(227,167,196,.2),transparent);border-radius:50%"></div>
-      <div style="position:relative;z-index:2">
-        <div style="font-size:2.4rem;margin-bottom:12px">✨🎆✨</div>
-        <h2 style="font-family:var(--font-serif);font-size:2.4rem;margin-bottom:10px">Festival Special Gifts</h2>
-        <p style="opacity:.8;margin-bottom:24px">Birthdays · Anniversaries · Diwali · Christmas · Valentine's Day</p>
-        <button class="btn-primary" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)" style="font-size:.97rem">🎁 Shop Festival Gifts</button>
+  <section class="section" style="background:var(--bg);display:none" id="festivalSection">
+
+    <!-- Banner: shows uploaded image if set, else falls back to gradient -->
+    <div id="festBannerWrap" style="border-radius:28px;margin-bottom:36px;overflow:hidden;position:relative">
+      <!-- Gradient fallback (shown when no image) -->
+      <div id="festGradientBanner" style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);padding:52px 48px;text-align:center;position:relative;overflow:hidden;color:#fff">
+        <div style="position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,79,139,.3),transparent);border-radius:50%"></div>
+        <div style="position:absolute;bottom:-30px;left:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(227,167,196,.2),transparent);border-radius:50%"></div>
+        <div style="position:relative;z-index:2">
+          <div style="font-size:2.4rem;margin-bottom:12px" id="festBannerEmoji">✨🎆✨</div>
+          <h2 style="font-family:var(--font-serif);font-size:2.4rem;margin-bottom:10px" id="secFestivalTitle">Festival Special Gifts</h2>
+          <p style="opacity:.8;margin-bottom:16px" id="festBannerSub">Birthdays · Anniversaries · Diwali · Christmas · Valentine's Day</p>
+          <div id="festOfferBadge" style="display:none;margin-bottom:20px">
+            <span style="display:inline-block;background:linear-gradient(135deg,#ff4f8b,#e33a7e);color:#fff;font-size:.9rem;font-weight:800;padding:8px 22px;border-radius:99px;letter-spacing:.5px" id="festOfferText"></span>
+          </div>
+        </div>
+      </div>
+      <!-- Uploaded image banner (hidden until image is set) -->
+      <div id="festImageBanner" style="display:none;position:relative">
+        <img id="festBannerImg" src="" alt="Festival Banner" style="width:100%;max-height:380px;object-fit:cover;display:block">
+        <!-- Overlay with text on top of image -->
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.1) 60%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:36px 24px;text-align:center;color:#fff">
+          <div style="font-size:2rem;margin-bottom:8px" id="festBannerEmojiImg">✨🎆✨</div>
+          <h2 style="font-family:var(--font-serif);font-size:2.2rem;margin-bottom:8px;text-shadow:0 2px 8px rgba(0,0,0,.4)" id="secFestivalTitleImg">Festival Special Gifts</h2>
+          <p style="opacity:.9;margin-bottom:12px;text-shadow:0 1px 4px rgba(0,0,0,.4)" id="festBannerSubImg">Birthdays · Anniversaries · Diwali · Christmas</p>
+          <div id="festOfferBadgeImg" style="display:none">
+            <span style="display:inline-block;background:linear-gradient(135deg,#ff4f8b,#e33a7e);color:#fff;font-size:.9rem;font-weight:800;padding:8px 22px;border-radius:99px;letter-spacing:.5px" id="festOfferTextImg"></span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="sec-head reveal"><span class="tag">Festival Picks</span><h2>Curated for Every Celebration</h2></div>
-    <div class="products-grid" id="homeFestival">
-      <div class="skel-card"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
-      <div class="skel-card"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
-      <div class="skel-card"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
-      <div class="skel-card"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
+
+    <!-- Special Offer Products (admin-selected) — highlighted -->
+    <div id="festSpecialWrap" style="display:none;margin-bottom:40px">
+      <div class="sec-head reveal">
+        <span class="tag" style="background:linear-gradient(135deg,#ff4f8b,#e33a7e);color:#fff">🎁 Special Offers</span>
+        <h2 id="secFestivalSub">Curated for Every Celebration</h2>
+        <p id="festSpecialOfferLabel" style="display:none;font-weight:700;color:var(--ac)"></p>
+      </div>
+      <div class="products-grid" id="homeFestivalSpecial"></div>
     </div>
+
+    <!-- All Festival Products (is_festival_special=1, excluding specials above) -->
+    <div id="festAllWrap" style="display:none">
+      <div class="sec-head reveal">
+        <span class="tag">All Festival Picks</span>
+        <h2>More Festival Gifts</h2>
+        <p>Browse our full collection of festive specials</p>
+      </div>
+      <div class="products-grid" id="homeFestival"></div>
+      <div style="text-align:center;margin-top:36px" class="reveal">
+        <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)">View All Festival Gifts →</button>
+      </div>
+    </div>
+
   </section>
 
   <!-- MOST LIKED -->
   <section class="section white-bg">
     <div class="sec-head reveal">
-      <span class="tag">Community Favourites</span>
-      <h2>Most Liked Products</h2>
+      <span class="tag" id="secMostLikedTag">Community Favourites</span>
+      <h2 id="secMostLikedTitle">Most Liked Products</h2>
       <p>Voted best by our customers — the most-loved gifts</p>
     </div>
     <div class="products-grid" id="homeMostLiked">
@@ -1439,17 +1488,65 @@ footer {
         <div class="form-group">
           <label>City *</label>
           <input type="text" id="ckCity" class="form-control" placeholder="Your city" oninput="validateChk('ckCity')">
-          <span class="form-error" id="ckCity-e">City is required</span>
+          <span class="form-error" id="ckCity-e">Enter a valid city name (letters only, min 2 chars)</span>
         </div>
         <div class="form-group">
           <label>State *</label>
-          <input type="text" id="ckState" class="form-control" placeholder="Your state">
+          <select id="ckState" class="form-control" onchange="validateChk('ckState')">
+            <option value="">-- Select State --</option>
+            <option>Andhra Pradesh</option>
+            <option>Arunachal Pradesh</option>
+            <option>Assam</option>
+            <option>Bihar</option>
+            <option>Chhattisgarh</option>
+            <option>Goa</option>
+            <option>Gujarat</option>
+            <option>Haryana</option>
+            <option>Himachal Pradesh</option>
+            <option>Jharkhand</option>
+            <option>Karnataka</option>
+            <option>Kerala</option>
+            <option>Madhya Pradesh</option>
+            <option>Maharashtra</option>
+            <option>Manipur</option>
+            <option>Meghalaya</option>
+            <option>Mizoram</option>
+            <option>Nagaland</option>
+            <option>Odisha</option>
+            <option>Punjab</option>
+            <option>Rajasthan</option>
+            <option>Sikkim</option>
+            <option>Tamil Nadu</option>
+            <option>Telangana</option>
+            <option>Tripura</option>
+            <option>Uttar Pradesh</option>
+            <option>Uttarakhand</option>
+            <option>West Bengal</option>
+            <option>Andaman and Nicobar Islands</option>
+            <option>Chandigarh</option>
+            <option>Dadra and Nagar Haveli and Daman and Diu</option>
+            <option>Delhi</option>
+            <option>Jammu and Kashmir</option>
+            <option>Ladakh</option>
+            <option>Lakshadweep</option>
+            <option>Puducherry</option>
+          </select>
+          <span class="form-error" id="ckState-e">Please select a valid Indian state</span>
         </div>
       </div>
       <div class="form-group" style="max-width:200px">
         <label>Pincode *</label>
         <input type="text" id="ckPin" class="form-control" placeholder="6-digit pincode" maxlength="6" oninput="validateChk('ckPin')">
-        <span class="form-error" id="ckPin-e">Pincode must be 6 digits</span>
+        <span class="form-error" id="ckPin-e">Enter a valid 6-digit Indian pincode</span>
+      </div>
+      <div class="form-group" style="max-width:220px">
+        <label>Address Type</label>
+        <select id="ckCategory" class="form-control">
+          <option value="">-- Select Type --</option>
+          <option value="Home">🏠 Home</option>
+          <option value="Work">💼 Work</option>
+          <option value="Other">📍 Other</option>
+        </select>
       </div>
 
       <!-- COUPON -->
@@ -1537,6 +1634,9 @@ footer {
       </div>
       <span class="form-error" id="loginGenErr" style="display:block;font-size:.88rem;text-align:center;margin-bottom:12px"></span>
       <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:14px" id="loginBtn" onclick="doLogin()">Sign In</button>
+      <div style="text-align:center;margin-bottom:10px">
+        <button onclick="showPage('forgot-password')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:.83rem;text-decoration:underline">Forgot Password?</button>
+      </div>
       <div class="auth-switch">Don't have an account? <button onclick="showPage('signup')">Sign Up</button></div>
       <p style="text-align:center;font-size:.77rem;color:var(--dg);margin-top:14px">
         By signing in you agree to our <button onclick="showPage('terms')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:.77rem">Terms</button> &amp; <button onclick="showPage('privacy')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:.77rem">Privacy Policy</button>
@@ -1544,6 +1644,56 @@ footer {
     </div>
   </div>
   <footer id="loginFooter"></footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: FORGOT PASSWORD
+════════════════════════════════════════════ -->
+<div class="page" id="page-forgot-password">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">🔑 Forgot Password</div>
+      <div class="auth-sub">Enter your email and we'll send you a reset link</div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="fpEmail" class="form-control" placeholder="your@email.com" oninput="validateField(this,'email')">
+        <span class="form-error" id="fpEmail-e">Enter a valid email address</span>
+      </div>
+      <span class="form-error" id="fpGenErr" style="display:block;font-size:.88rem;text-align:center;margin-bottom:12px"></span>
+      <div id="fpSuccess" style="display:none;background:rgba(0,200,83,.1);border:1px solid rgba(0,200,83,.3);border-radius:10px;padding:14px;text-align:center;font-size:.88rem;color:#00c853;margin-bottom:14px">
+        ✅ If this email is registered, a reset link has been sent. Check your inbox!
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:14px" id="fpBtn" onclick="doForgotPassword()">Send Reset Link 📧</button>
+      <div class="auth-switch">Remember your password? <button onclick="showPage('login')">Sign In</button></div>
+    </div>
+  </div>
+  <footer id="fpFooter"></footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: RESET PASSWORD
+════════════════════════════════════════════ -->
+<div class="page" id="page-reset-password">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">🔒 Reset Password</div>
+      <div class="auth-sub">Choose a new password for your account</div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="rpPw" class="form-control" placeholder="Min. 8 characters" oninput="validateField(this,'password')">
+        <span class="form-error" id="rpPw-e">Password must be at least 8 characters</span>
+      </div>
+      <div class="form-group">
+        <label>Confirm New Password</label>
+        <input type="password" id="rpCpw" class="form-control" placeholder="Re-enter new password" oninput="validateField(this,'notempty')">
+        <span class="form-error" id="rpCpw-e">Please confirm your password</span>
+      </div>
+      <span class="form-error" id="rpGenErr" style="display:block;font-size:.88rem;text-align:center;margin-bottom:12px"></span>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:14px" id="rpBtn" onclick="doResetPassword()">Set New Password ✅</button>
+      <div class="auth-switch">Back to <button onclick="showPage('login')">Sign In</button></div>
+    </div>
+  </div>
+  <footer id="rpFooter"></footer>
 </div>
 
 <!-- ════════════════════════════════════════════
@@ -1596,15 +1746,15 @@ footer {
   <div style="background:linear-gradient(135deg,#fff0f7,#fde8f0);padding:100px 5% 72px;text-align:center">
     <div style="font-size:4rem;margin-bottom:18px">🎁</div>
     <h1 style="font-family:var(--font-serif);font-size:clamp(2.4rem,5vw,3.8rem);margin-bottom:14px">Our Story</h1>
-    <p style="font-size:1.07rem;color:var(--dg);max-width:580px;margin:0 auto">Born from a love of meaningful gifting, Mons Fusion creates personalised gifts that tell your story.</p>
+    <p style="font-size:1.07rem;color:var(--dg);max-width:580px;margin:0 auto" id="aboutStorySub">Born from a love of meaningful gifting, Mons Fusion creates personalised gifts that tell your story.</p>
   </div>
   <div class="about-story">
-    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600" alt="Our Story" style="animation:pageIn .6s ease" onerror="this.src='https://via.placeholder.com/500x400/fde8f0/ff4f8b?text=Our+Story'">
+    <img id="aboutImage" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600" alt="Our Story" style="animation:pageIn .6s ease" onerror="this.src='https://via.placeholder.com/500x400/fde8f0/ff4f8b?text=Our+Story'">
     <div>
-      <h2>Turning Moments <span style="color:var(--ac);font-style:italic">into Memories</span></h2>
-      <p>At Mons Fusion, we believe the best gifts come from the heart. Founded in 2022, we started as a small home-based gifting studio with one simple goal: help people express love through beautifully crafted, personalised gifts.</p>
-      <p>From custom polaroids that bring memories to life, to carefully curated hampers for every occasion — every product we create is made with love, attention to detail, and the joy of making someone's day special.</p>
-      <p>Today we serve 10,000+ happy customers across India, and we're just getting started.</p>
+      <h2 id="aboutTitle">Turning Moments <span style="color:var(--ac);font-style:italic">into Memories</span></h2>
+      <p id="aboutPara1">At Mons Fusion, we believe the best gifts come from the heart. Founded in 2022, we started as a small home-based gifting studio with one simple goal: help people express love through beautifully crafted, personalised gifts.</p>
+      <p id="aboutPara2">From custom polaroids that bring memories to life, to carefully curated hampers for every occasion — every product we create is made with love, attention to detail, and the joy of making someone's day special.</p>
+      <p id="aboutPara3">Today we serve 10,000+ happy customers across India, and we're just getting started.</p>
       <button class="btn-primary" onclick="showPage('products')" style="margin-top:8px">Shop Our Collection →</button>
     </div>
   </div>
@@ -1639,19 +1789,19 @@ footer {
       <p style="color:var(--dg);line-height:1.8;margin-bottom:28px">Have questions? Want a custom bulk order? Looking for gifting advice? We're always here to help!</p>
       <div class="contact-info-card">
         <div class="contact-icon">📱</div>
-        <div><strong style="font-size:.9rem">WhatsApp</strong><br><span style="color:var(--dg);font-size:.875rem">+91 98765 43210</span></div>
+        <div><strong style="font-size:.9rem">WhatsApp</strong><br><span id="contactWhatsapp" style="color:var(--dg);font-size:.875rem">+91 98765 43210</span></div>
       </div>
       <div class="contact-info-card">
         <div class="contact-icon">📧</div>
-        <div><strong style="font-size:.9rem">Email</strong><br><span style="color:var(--dg);font-size:.875rem">hello@monsfusion.com</span></div>
+        <div><strong style="font-size:.9rem">Email</strong><br><span id="contactEmail" style="color:var(--dg);font-size:.875rem">hello@monsfusion.com</span></div>
       </div>
       <div class="contact-info-card">
         <div class="contact-icon">📸</div>
-        <div><strong style="font-size:.9rem">Instagram</strong><br><span style="color:var(--dg);font-size:.875rem">@monsfusion</span></div>
+        <div><strong style="font-size:.9rem">Instagram</strong><br><span id="contactInstagram" style="color:var(--dg);font-size:.875rem">@monsfusion</span></div>
       </div>
       <div class="contact-info-card">
         <div class="contact-icon">⏰</div>
-        <div><strong style="font-size:.9rem">Working Hours</strong><br><span style="color:var(--dg);font-size:.875rem">Mon–Sat: 10am – 8pm IST</span></div>
+        <div><strong style="font-size:.9rem">Working Hours</strong><br><span id="contactHours" style="color:var(--dg);font-size:.875rem">Mon–Sat: 10am – 8pm IST</span></div>
       </div>
     </div>
     <div class="contact-form-wrap">
@@ -1667,6 +1817,11 @@ footer {
           <input type="email" id="ctEmail" class="form-control" placeholder="your@email.com">
           <span class="form-error" id="ctEmail-e">Enter a valid email</span>
         </div>
+      </div>
+      <div class="form-group">
+        <label>Phone Number <span style="color:var(--dg);font-size:.78rem;font-weight:400">(optional)</span></label>
+        <input type="tel" id="ctPhone" class="form-control" placeholder="10-digit mobile number" maxlength="10">
+        <span class="form-error" id="ctPhone-e">Must be 10 digits and start with 6–9</span>
       </div>
       <div class="form-group">
         <label>Subject</label>
@@ -1874,7 +2029,8 @@ let cartItems   = [];
 let wishItems   = [];
 let allProducts = [];
 let currentProductId = null;
-let currentQty  = 1;
+let currentQty    = 1;
+let currentMinQty = 1;  // set to 10 for specific polaroid products
 let activeCoupon = null;
 let checkoutTotal = 0;
 
@@ -1950,6 +2106,8 @@ function showPage(id) {
     checkout:       loadCheckoutPage,
     login:          () => { if(currentUser) showPage('profile'); },
     signup:         () => { if(currentUser) showPage('home'); },
+    'forgot-password': () => {},
+    'reset-password':  () => { checkResetTokenInUrl(); },
   };
   if (handlers[id]) handlers[id]();
 
@@ -1971,7 +2129,7 @@ function footerHTML() {
     <div class="footer-grid">
       <div class="footer-brand">
         <h3>Mons Fusion 🎁</h3>
-        <p>Creating magical customised gifts for every special moment. Made with love, delivered with care.</p>
+        <p id="footerDesc">Creating magical customised gifts for every special moment. Made with love, delivered with care.</p>
         <div class="footer-socials">
           <button class="social-btn" title="Instagram">📸</button>
           <button class="social-btn" title="LinkedIn">💼</button>
@@ -2009,11 +2167,14 @@ function footerHTML() {
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024 Mons Fusion. All rights reserved. Made with ❤️ in India.</p>
+      <p id="footerCopyright">© 2024 Mons Fusion. All rights reserved. Made with ❤️ in India.</p>
       <p>🔒 Secure payments &nbsp;|&nbsp; 🇮🇳 Pan-India delivery</p>
     </div>
   </div>`;
 }
+
+// Cache for site content — populated by applySiteContent()
+let _siteContent = {};
 
 function injectFooter(pageId) {
   const el = document.getElementById(pageId + 'Footer') || document.getElementById(pageId.replace('-','') + 'Footer');
@@ -2025,7 +2186,13 @@ function injectFooter(pageId) {
   ];
   for (const fid of ids) {
     const el = document.getElementById(fid);
-    if (el && !el.innerHTML.trim()) { el.innerHTML = footerHTML(); return; }
+    if (el && !el.innerHTML.trim()) {
+      el.innerHTML = footerHTML();
+      // Apply dynamic footer content from cached site settings
+      if (_siteContent.footer_desc)      { const e = el.querySelector('#footerDesc');      if (e) e.textContent = _siteContent.footer_desc; }
+      if (_siteContent.footer_copyright) { const e = el.querySelector('#footerCopyright'); if (e) e.textContent = _siteContent.footer_copyright; }
+      return;
+    }
   }
 }
 
@@ -2044,8 +2211,9 @@ async function initSession() {
 }
 
 function updateNavUser() {
-  const area = document.getElementById('navUserArea');
-  const ml   = document.getElementById('mobLoginLink');
+  const area      = document.getElementById('navUserArea');
+  const ml        = document.getElementById('mobLoginLink');
+  const logoutBtn = document.getElementById('navLogoutBtn');
   if (currentUser && currentUser.logged_in) {
     const init = (currentUser.user_name||'U')[0].toUpperCase();
     area.innerHTML = `<div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showPage('profile')">
@@ -2053,9 +2221,11 @@ function updateNavUser() {
       <span style="font-size:.85rem;font-weight:600;display:none" id="navUserName">${currentUser.user_name}</span>
     </div>`;
     if (ml) ml.style.display = 'none';
+    if (logoutBtn) logoutBtn.style.display = '';
   } else {
     area.innerHTML = `<button class="nav-icon" onclick="showPage('login')" title="Login" id="navLoginBtn">👤</button>`;
     if (ml) ml.style.display = '';
+    if (logoutBtn) logoutBtn.style.display = 'none';
   }
 }
 
@@ -2129,11 +2299,77 @@ async function loadHomePage() {
     const [bs, ml, fest] = await Promise.all([
       API.get('/api/products?best_seller=1&limit=8'),
       API.get('/api/products?sort=likes&limit=8'),
-      API.get('/api/products?category=Hampers&limit=4')
+      API.get('/api/festival')
     ]);
     document.getElementById('homeBestSellers').innerHTML = bs.map(renderProductCard).join('');
     document.getElementById('homeMostLiked').innerHTML   = ml.map(renderProductCard).join('');
-    document.getElementById('homeFestival').innerHTML    = fest.map(renderProductCard).join('');
+
+    // Festival section — only show if active
+    const festSection = document.getElementById('festivalSection');
+    if (!fest.active) {
+      festSection.style.display = 'none';
+      initReveal();
+      return;
+    }
+
+    festSection.style.display = '';
+
+    // Helper to set text content safely
+    const setEl = (id, val) => { const e = document.getElementById(id); if (e && val) e.textContent = val; };
+
+    // ── Banner: image or gradient fallback ──
+    const hasBannerImg = !!fest.banner_image;
+    document.getElementById('festGradientBanner').style.display = hasBannerImg ? 'none' : '';
+    document.getElementById('festImageBanner').style.display    = hasBannerImg ? ''     : 'none';
+
+    if (hasBannerImg) {
+      // Image banner — populate overlay text
+      document.getElementById('festBannerImg').src = fest.banner_image;
+      setEl('festBannerEmojiImg',  fest.emoji);
+      setEl('secFestivalTitleImg', fest.name);
+      setEl('festBannerSubImg',    fest.sub_text);
+      const badgeImg = document.getElementById('festOfferBadgeImg');
+      const badgeTxtImg = document.getElementById('festOfferTextImg');
+      if (fest.offer_text) { badgeTxtImg.textContent = fest.offer_text; badgeImg.style.display = ''; }
+      else { badgeImg.style.display = 'none'; }
+    } else {
+      // Gradient banner
+      setEl('festBannerEmoji',  fest.emoji);
+      setEl('secFestivalTitle', fest.name);
+      setEl('festBannerSub',    fest.sub_text);
+      const badge    = document.getElementById('festOfferBadge');
+      const badgeTxt = document.getElementById('festOfferText');
+      if (fest.offer_text) { badgeTxt.textContent = fest.offer_text; badge.style.display = ''; }
+      else { badge.style.display = 'none'; }
+    }
+
+    // ── Special Offer Products (admin-selected) ──
+    const specialWrap = document.getElementById('festSpecialWrap');
+    if (fest.products && fest.products.length) {
+      specialWrap.style.display = '';
+      setEl('secFestivalSub', fest.sub_text || 'Curated for Every Celebration');
+      // Show offer label if set
+      const offerLabel = document.getElementById('festSpecialOfferLabel');
+      if (fest.offer_text) {
+        offerLabel.textContent = '🏷 ' + fest.offer_text;
+        offerLabel.style.display = '';
+      } else {
+        offerLabel.style.display = 'none';
+      }
+      document.getElementById('homeFestivalSpecial').innerHTML = fest.products.map(renderProductCard).join('');
+    } else {
+      specialWrap.style.display = 'none';
+    }
+
+    // ── All Festival Products (remaining is_festival_special=1) ──
+    const allWrap = document.getElementById('festAllWrap');
+    if (fest.all_fest_products && fest.all_fest_products.length) {
+      allWrap.style.display = '';
+      document.getElementById('homeFestival').innerHTML = fest.all_fest_products.map(renderProductCard).join('');
+    } else {
+      allWrap.style.display = 'none';
+    }
+
     initReveal();
   } catch(e) { console.error('Home load error:', e); }
 }
@@ -2260,9 +2496,18 @@ function doNavSearch() {
 // ═══════════════════════════════════════════
 //  PRODUCT DETAIL
 // ═══════════════════════════════════════════
+// Products requiring minimum order quantity of 10
+const MIN_QTY_10_PRODUCTS = [
+  '1 large laminated polaroid',
+  '1 large glossy polaroid',
+  '1 regular laminated polaroid',
+  '1 regular glossy polaroid',
+];
+
 async function openProduct(pid) {
   currentProductId = pid;
-  currentQty = 1;
+  currentQty    = 1;
+  currentMinQty = 1;
   showPage('product-detail');
 
   const content = document.getElementById('pdContent');
@@ -2307,6 +2552,7 @@ async function openProduct(pid) {
           <span class="qty-num" id="pdQtyNum">1</span>
           <button class="qty-btn" onclick="changeQty(1)">+</button>
         </div>
+        <div id="pdMinQtyNote" style="display:none;font-size:.78rem;color:#ff9500;margin-top:-8px;margin-bottom:4px">⚠️ Minimum order quantity: 10</div>
         <div class="pd-btns">
           <button class="btn-primary" onclick="addToCart(${p.id},currentQty)" style="font-size:.95rem">🛍 Add to Cart</button>
           <button class="btn-secondary" id="pdWishBtn" onclick="toggleWish(${p.id},this)" style="font-size:.95rem">♡ Wishlist</button>
@@ -2333,6 +2579,15 @@ async function openProduct(pid) {
     // Reviews
     renderReviews(p);
 
+    // Apply minimum quantity rule for specific polaroid products
+    if (MIN_QTY_10_PRODUCTS.includes(p.name.toLowerCase())) {
+      currentMinQty = 10;
+      currentQty    = 10;
+      document.getElementById('pdQtyNum').textContent = 10;
+      const note = document.getElementById('pdMinQtyNote');
+      if (note) note.style.display = '';
+    }
+
     // Related
     const rg = document.getElementById('relatedGrid');
     if (p.related && p.related.length) {
@@ -2354,7 +2609,7 @@ function setPdImg(el, src) {
 }
 
 function changeQty(delta) {
-  currentQty = Math.max(1, Math.min(10, currentQty + delta));
+  currentQty = Math.max(currentMinQty, currentQty + delta);
   document.getElementById('pdQtyNum').textContent = currentQty;
 }
 
@@ -2374,6 +2629,7 @@ function renderReviews(p) {
             <div class="rv-date">${(r.created_at||'').slice(0,10)}</div>
           </div>
           <p class="rv-text">${r.comment}</p>
+          ${r.images && r.images.length ? '<div class="rv-images">' + r.images.map(img => '<img class="rv-img" src="' + img + '" onclick="openReviewImg(this.src)" alt="review photo">'  ).join('') + '</div>' : ''}
         </div>`).join('') : '<p style="color:var(--dg)">No reviews yet — be the first to review!</p>'}
     </div>
     <div>
@@ -2394,6 +2650,12 @@ function renderReviews(p) {
           <textarea class="form-control" id="reviewText" rows="4" placeholder="Share your experience with this product..."></textarea>
           <span class="form-error" id="reviewText-e">Please write your review</span>
         </div>
+        <div class="form-group">
+          <label>Photos <span style="color:var(--dg);font-weight:400;font-size:.78rem">(optional, up to 5)</span></label>
+          <input type="file" id="reviewImgInput" class="review-img-input" accept="image/*" multiple onchange="previewReviewImages(this)">
+          <label for="reviewImgInput" class="review-img-label">📷 Add Photos</label>
+          <div class="review-img-preview" id="reviewImgPreview"></div>
+        </div>
         <button class="btn-primary" onclick="submitReview()" style="width:100%;justify-content:center" id="reviewBtn">Submit Review ⭐</button>
         ${!currentUser ? '<p style="font-size:.78rem;color:var(--dg);margin-top:10px;text-align:center">Please <button onclick="showPage(\'login\')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-weight:700">login</button> to submit a review</p>' : ''}
       </div>
@@ -2404,6 +2666,53 @@ let reviewRating = 5;
 function setReviewRating(n) {
   reviewRating = n;
   document.querySelectorAll('#starPick span').forEach((s,i) => s.classList.toggle('lit', i < n));
+}
+
+// --- Review image helpers ---
+let reviewImages = []; // array of base64 strings
+
+function previewReviewImages(input) {
+  const files = Array.from(input.files).slice(0, 5);
+  reviewImages = [];
+  const preview = document.getElementById('reviewImgPreview');
+  preview.innerHTML = '';
+  files.forEach((file, idx) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      reviewImages[idx] = e.target.result;
+      const thumb = document.createElement('div');
+      thumb.className = 'rip-thumb';
+      thumb.innerHTML = '<img src="' + e.target.result + '" alt="preview"><button class="rip-rm" onclick="removeReviewImg(' + idx + ')">✕</button>';
+      preview.appendChild(thumb);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removeReviewImg(idx) {
+  reviewImages.splice(idx, 1);
+  // Re-trigger file input reset so user can re-add
+  const input = document.getElementById('reviewImgInput');
+  input.value = '';
+  const preview = document.getElementById('reviewImgPreview');
+  preview.innerHTML = '';
+  reviewImages.forEach((b64, i) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'rip-thumb';
+    thumb.innerHTML = '<img src="' + b64 + '" alt="preview"><button class="rip-rm" onclick="removeReviewImg(' + i + ')">✕</button>';
+    preview.appendChild(thumb);
+  });
+}
+
+function openReviewImg(src) {
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+  ov.onclick = () => ov.remove();
+  const img = document.createElement('img');
+  img.src = src;
+  img.style.cssText = 'max-width:92vw;max-height:90vh;border-radius:10px;box-shadow:0 8px 40px #0008';
+  ov.appendChild(img);
+  document.body.appendChild(ov);
 }
 
 async function submitReview() {
@@ -2418,9 +2727,10 @@ async function submitReview() {
   btn.disabled = true;
 
   try {
-    const d = await API.post('/api/reviews', {product_id: currentProductId, rating: reviewRating, comment: cm});
+    const d = await API.post('/api/reviews', {product_id: currentProductId, rating: reviewRating, comment: cm, images: reviewImages});
     if (d.error) { showToast(d.error, 'error'); btn.innerHTML = 'Submit Review ⭐'; btn.disabled = false; return; }
     showToast('Review submitted! 🌟', 'success');
+    reviewImages = [];
     setTimeout(() => openProduct(currentProductId), 800);
   } catch(e) { showToast('Failed to submit review', 'error'); btn.innerHTML = 'Submit Review ⭐'; btn.disabled = false; }
 }
@@ -2519,7 +2829,6 @@ function updateCartSummary() {
 
 async function updateQty(cartId, qty) {
   if (qty < 1) { removeFromCart(cartId); return; }
-  if (qty > 10) return;
   await API.post('/api/cart/update', {cart_id: cartId, quantity: qty});
   const item = cartItems.find(i => i.id === cartId);
   if (item) item.quantity = qty;
@@ -2623,12 +2932,18 @@ async function loadCheckoutPage() {
   cartItems = await API.get('/api/cart');
   if (!cartItems.length) { showPage('cart'); return; }
 
-  // Pre-fill user details
+  // Pre-fill user details + saved address
   try {
     const pr = await API.get('/api/profile');
-    if (pr.name) document.getElementById('ckName').value = pr.name;
+    if (pr.name)  document.getElementById('ckName').value  = pr.name;
     if (pr.email) document.getElementById('ckEmail').value = pr.email;
     if (pr.phone) document.getElementById('ckPhone').value = pr.phone || '';
+    if (pr.address_house) document.getElementById('ckHouse').value = pr.address_house;
+    if (pr.address_area)  document.getElementById('ckArea').value  = pr.address_area;
+    if (pr.address_city)  document.getElementById('ckCity').value  = pr.address_city;
+    if (pr.address_state) document.getElementById('ckState').value = pr.address_state;
+    if (pr.address_pin)   document.getElementById('ckPin').value   = pr.address_pin;
+    if (pr.address_category) document.getElementById('ckCategory').value = pr.address_category;
   } catch(e) {}
 
   activeCoupon = null;
@@ -2701,15 +3016,29 @@ async function applyCoupon() {
 
 // Checkout validation
 
+// India address validation
+const INDIA_STATES = [
+  "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
+  "Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh",
+  "Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab",
+  "Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh",
+  "Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir",
+  "Ladakh","Lakshadweep","Puducherry"
+];
+
 const ckValidators = {
   ckName:  v => v.trim().length >= 3,
-  ckPhone: v => /^\d{10}$/.test(v.trim()),
-  ckEmail: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+  ckPhone: v => /^[6-9]\d{9}$/.test(v.trim()),
+  ckEmail: v => /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,10}$/.test(v.trim()),
   ckHouse: v => v.trim().length > 0,
   ckArea:  v => v.trim().length > 0,
-  ckState: v =>/^[A-Za-z ]+$/.test(v.trim()),
-  ckCity:  v => /^[A-Za-z ]+$/.test(v.trim()),
-  ckPin:   v => /^\d{6}$/.test(v.trim()),
+  // State must be selected from the dropdown (valid Indian state)
+  ckState: v => INDIA_STATES.includes(v.trim()),
+  // City: letters, spaces, hyphens, apostrophes — min 2 chars
+  ckCity:  v => /^[A-Za-z][A-Za-z\s\-\']{1,}$/.test(v.trim()),
+  // Indian pincodes: exactly 6 digits, first digit 1-9 (no leading zero)
+  ckPin:   v => /^[1-9]\d{5}$/.test(v.trim()),
 };
 
 
@@ -2839,6 +3168,30 @@ async function loadProfilePage() {
             </div>
             <div class="form-group"><label>Email</label><input type="email" class="form-control" value="${pr.email}" disabled style="background:var(--gr)"></div>
             <div class="form-group"><label>Member Since</label><input class="form-control" value="${new Date(pr.created_at).toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})}" disabled style="background:var(--gr)"></div>
+            <h3 style="font-size:1rem;font-weight:700;margin:24px 0 16px;padding-top:20px;border-top:1px solid var(--border)">📦 Saved Delivery Address</h3>
+            <p style="font-size:.78rem;color:var(--dg);margin-bottom:14px;margin-top:-8px">Saved address will be auto-filled at checkout</p>
+            <div class="form-group"><label>House / Room Number</label><input type="text" id="profHouse" class="form-control" value="${pr.address_house||''}" placeholder="Flat / House No., Building Name"></div>
+            <div class="form-group"><label>Area / Street</label><input type="text" id="profArea" class="form-control" value="${pr.address_area||''}" placeholder="Street name, Locality"></div>
+            <div class="form-row">
+              <div class="form-group"><label>City</label><input type="text" id="profCity" class="form-control" value="${pr.address_city||''}" placeholder="Your city"></div>
+              <div class="form-group">
+                <label>State</label>
+                <select id="profState" class="form-control">
+                  <option value="">-- Select State --</option>
+                  ${INDIA_STATES.map(s => '<option' + (pr.address_state===s?' selected':'') + '>' + s + '</option>').join('')}
+                </select>
+              </div>
+            </div>
+            <div class="form-group" style="max-width:200px"><label>Pincode</label><input type="text" id="profPin" class="form-control" value="${pr.address_pin||''}" placeholder="6-digit pincode" maxlength="6"></div>
+            <div class="form-group" style="max-width:220px">
+              <label>Address Type</label>
+              <select id="profCategory" class="form-control">
+                <option value="">-- Select Type --</option>
+                <option value="Home" ${pr.address_category==='Home'?'selected':''}>🏠 Home</option>
+                <option value="Work" ${pr.address_category==='Work'?'selected':''}>💼 Work</option>
+                <option value="Other" ${pr.address_category==='Other'?'selected':''}>📍 Other</option>
+              </select>
+            </div>
             <button class="btn-primary" onclick="saveProfile()" id="saveProfileBtn">Save Changes</button>
           </div>
           <div class="tab-panel" id="tabOrders">
@@ -2888,8 +3241,14 @@ async function loadOrders() {
 }
 
 async function saveProfile() {
-  const nm = document.getElementById('profName').value.trim();
-  const ph = document.getElementById('profPhone').value.trim();
+  const nm    = document.getElementById('profName').value.trim();
+  const ph    = document.getElementById('profPhone').value.trim();
+  const house = document.getElementById('profHouse')?.value.trim() || '';
+  const area  = document.getElementById('profArea')?.value.trim()  || '';
+  const city  = document.getElementById('profCity')?.value.trim()  || '';
+  const state = document.getElementById('profState')?.value.trim() || '';
+  const pin   = document.getElementById('profPin')?.value.trim()   || '';
+  const category = document.getElementById('profCategory')?.value.trim() || '';
   const ne = document.getElementById('profName-e');
   const pe = document.getElementById('profPhone-e');
 
@@ -2904,7 +3263,7 @@ async function saveProfile() {
   btn.innerHTML = '<span class="spinner"></span> Saving...'; btn.disabled = true;
 
   try {
-    const d = await API.put('/api/profile', {name: nm, phone: ph});
+    const d = await API.put('/api/profile', {name: nm, phone: ph, address_house: house, address_area: area, address_city: city, address_state: state, address_pin: pin, address_category: category});
     if (d.error) { showToast(d.error,'error'); }
     else { showToast('Profile updated! ✅','success'); currentUser.user_name = nm; updateNavUser(); }
   } catch(e) { showToast('Failed to update profile','error'); }
@@ -2929,7 +3288,7 @@ function validateField(el, type) {
   const v = el.value.trim();
   let ok = true;
   if (type === 'name')     ok = v.length >= 3;
-  if (type === 'email')    ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  if (type === 'email')    ok = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,10}$/.test(v);
   if (type === 'phone')    ok = !v || /^\d{10}$/.test(v);
   if (type === 'password') ok = v.length >= 8;
   if (type === 'notempty') ok = v.length > 0;
@@ -3010,16 +3369,125 @@ async function doSignup() {
 }
 
 // ═══════════════════════════════════════════
+//  FORGOT / RESET PASSWORD
+// ═══════════════════════════════════════════
+
+async function doForgotPassword() {
+  const em  = document.getElementById('fpEmail').value.trim();
+  const ge  = document.getElementById('fpGenErr');
+  const suc = document.getElementById('fpSuccess');
+  ge.classList.remove('show');
+  suc.style.display = 'none';
+
+  if (!validateField(document.getElementById('fpEmail'), 'email')) {
+    document.getElementById('fpBtn').classList.add('shake');
+    setTimeout(() => document.getElementById('fpBtn').classList.remove('shake'), 500);
+    return;
+  }
+
+  const btn = document.getElementById('fpBtn');
+  btn.innerHTML = '<span class="spinner"></span> Sending...';
+  btn.disabled = true;
+
+  try {
+    const d = await API.post('/api/forgot-password', {email: em});
+    if (d.error) {
+      ge.textContent = d.error; ge.classList.add('show');
+    } else {
+      suc.style.display = '';
+      document.getElementById('fpEmail').value = '';
+      document.getElementById('fpEmail').classList.remove('valid', 'invalid');
+    }
+  } catch(e) {
+    ge.textContent = 'Something went wrong. Please try again.';
+    ge.classList.add('show');
+  }
+  btn.innerHTML = 'Send Reset Link 📧';
+  btn.disabled = false;
+}
+
+// Called when reset-password page is shown — reads token from URL hash
+let resetToken = '';
+function checkResetTokenInUrl() {
+  const hash   = window.location.hash; // e.g. #reset-password?token=abc123
+  const match  = hash.match(/[?&]token=([^&]+)/);
+  resetToken   = match ? decodeURIComponent(match[1]) : '';
+  const ge     = document.getElementById('rpGenErr');
+  if (ge) ge.classList.remove('show');
+  if (!resetToken) {
+    const card = document.querySelector('#page-reset-password .auth-card');
+    if (card) card.innerHTML = `
+      <div class="auth-logo">❌ Invalid Link</div>
+      <div class="auth-sub" style="color:#ff1744">This reset link is missing or invalid.</div>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-top:20px" onclick="showPage('forgot-password')">Request a New Link</button>`;
+  }
+}
+
+async function doResetPassword() {
+  const pw  = document.getElementById('rpPw').value;
+  const cpw = document.getElementById('rpCpw').value;
+  const ge  = document.getElementById('rpGenErr');
+  ge.classList.remove('show');
+
+  let ok = true;
+  if (!validateField(document.getElementById('rpPw'), 'password')) ok = false;
+  if (!validateField(document.getElementById('rpCpw'), 'notempty')) ok = false;
+  if (pw !== cpw) {
+    const e = document.getElementById('rpCpw-e');
+    e.textContent = 'Passwords do not match';
+    e.classList.add('show');
+    document.getElementById('rpCpw').classList.add('invalid');
+    ok = false;
+  }
+  if (!ok) {
+    document.getElementById('rpBtn').classList.add('shake');
+    setTimeout(() => document.getElementById('rpBtn').classList.remove('shake'), 500);
+    return;
+  }
+
+  const btn = document.getElementById('rpBtn');
+  btn.innerHTML = '<span class="spinner"></span> Saving...';
+  btn.disabled = true;
+
+  try {
+    const d = await API.post('/api/reset-password', {token: resetToken, password: pw});
+    if (d.error) {
+      ge.textContent = d.error; ge.classList.add('show');
+      btn.innerHTML = 'Set New Password ✅'; btn.disabled = false;
+    } else {
+      showToast('Password reset successfully! Please sign in. 🎉', 'success');
+      resetToken = '';
+      showPage('login');
+    }
+  } catch(e) {
+    ge.textContent = 'Something went wrong. Please try again.';
+    ge.classList.add('show');
+    btn.innerHTML = 'Set New Password ✅'; btn.disabled = false;
+  }
+}
+
+// On page load — if URL hash contains a reset token, go straight to reset page
+(function checkInitialResetToken() {
+  if (window.location.hash.includes('reset-password') && window.location.hash.includes('token=')) {
+    // Defer until DOM is ready
+    setTimeout(() => showPage('reset-password'), 100);
+  }
+})();
+
+// ═══════════════════════════════════════════
 //  CONTACT
 // ═══════════════════════════════════════════
 
-  function sendContact() {
+  async function sendContact() {
   const nm  = document.getElementById('ctName').value.trim();
   const em  = document.getElementById('ctEmail').value.trim();
+  const ph  = document.getElementById('ctPhone').value.trim();
+  const sub = document.getElementById('ctSub').value;
   const msg = document.getElementById('ctMsg').value.trim();
 
   const nameRegex  = /^[A-Za-z' ]+$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,10}$/;
+  const phoneRegex = /^[6-9][0-9]{9}$/;
 
   let ok = true;
 
@@ -3043,6 +3511,16 @@ async function doSignup() {
     document.getElementById('ctEmail').classList.remove('invalid');
   }
 
+  // Phone validation (optional — only validate if provided)
+  if (ph && !phoneRegex.test(ph)) {
+    document.getElementById('ctPhone-e').classList.add('show');
+    document.getElementById('ctPhone').classList.add('invalid');
+    ok = false;
+  } else {
+    document.getElementById('ctPhone-e').classList.remove('show');
+    document.getElementById('ctPhone').classList.remove('invalid');
+  }
+
   // Message validation
   if (!msg) {
     document.getElementById('ctMsg-e').classList.add('show');
@@ -3062,15 +3540,29 @@ async function doSignup() {
     return;
   }
 
-  // Success
-  showToast("Message sent! We'll get back to you soon 📩", "success");
+  // Submit to backend
+  const btn = document.getElementById('ctBtn');
+  btn.innerHTML = '<span class="spinner"></span> Sending...';
+  btn.disabled = true;
 
-  document.getElementById('ctName').value = '';
-  document.getElementById('ctEmail').value = '';
-  document.getElementById('ctMsg').value = '';
+  try {
+    const d = await API.post('/api/contact', {name: nm, email: em, phone: ph || null, subject: sub, message: msg});
+    if (d.error) { showToast(d.error, 'error'); }
+    else {
+      showToast("Message sent! We'll get back to you soon 📩", "success");
+      document.getElementById('ctName').value = '';
+      document.getElementById('ctEmail').value = '';
+      document.getElementById('ctPhone').value = '';
+      document.getElementById('ctMsg').value = '';
+      document.querySelectorAll('#page-contact .form-control')
+        .forEach(el => el.classList.remove('valid', 'invalid'));
+    }
+  } catch(e) {
+    showToast('Failed to send message. Please try again.', 'error');
+  }
 
-  document.querySelectorAll('#page-contact .form-control')
-    .forEach(el => el.classList.remove('valid', 'invalid'));
+  btn.innerHTML = 'Send Message 📩';
+  btn.disabled = false;
 }
 
 // ═══════════════════════════════════════════
@@ -3101,10 +3593,65 @@ document.addEventListener('click', e => {
 });
 
 // ═══════════════════════════════════════════
+//  SITE CONTENT
+// ═══════════════════════════════════════════
+async function applySiteContent() {
+  try {
+    const d = await API.get('/api/site-content');
+    _siteContent = d;  // cache for use by injectFooter()
+    const set    = (id, val) => { const el = document.getElementById(id); if (el && val) el.textContent = val; };
+    const setImg = (id, src) => { const el = document.getElementById(id); if (el && src) el.src = src; };
+    const setHTML = (id, val) => { const el = document.getElementById(id); if (el && val) el.innerHTML = val; };
+
+    // Marquee / announcement bar
+    if (d.marquee_text) setHTML('marqueeText', d.marquee_text);
+
+    // Hero
+    set('heroHeroBadge', d.hero_badge);
+    set('heroTitle',     d.hero_title);
+    set('heroSubtitle',  d.hero_subtitle);
+    setImg('heroImage',  d.hero_image);
+
+    // Stats bar
+    set('stat1Val',   d.stat1_val);   set('stat1Label', d.stat1_label);
+    set('stat2Val',   d.stat2_val);   set('stat2Label', d.stat2_label);
+    set('stat3Val',   d.stat3_val);   set('stat3Label', d.stat3_label);
+    set('stat4Val',   d.stat4_val);   set('stat4Label', d.stat4_label);
+
+    // Homepage section headings
+    set('secBestSellersTag',   d.section_bestsellers_tag);
+    set('secBestSellersTitle', d.section_bestsellers_title);
+    set('secFestivalTitle',    d.section_festival_title);
+    set('secFestivalSub',      d.section_festival_sub);
+    set('secMostLikedTag',     d.section_mostliked_tag);
+    set('secMostLikedTitle',   d.section_mostliked_title);
+
+    // About page
+    set('aboutStorySub', d.about_story_sub);
+    set('aboutTitle',    d.about_title);
+    set('aboutPara1',    d.about_para1);
+    set('aboutPara2',    d.about_para2);
+    set('aboutPara3',    d.about_para3);
+    setImg('aboutImage', d.about_image);
+
+    // Contact info
+    set('contactWhatsapp',  d.contact_whatsapp);
+    set('contactEmail',     d.contact_email);
+    set('contactInstagram', d.contact_instagram);
+    set('contactHours',     d.contact_hours);
+
+    // Footer IDs are injected dynamically per-page via injectFooter()
+    // _siteContent cache (set above) ensures they're applied on each injection
+
+  } catch(e) { /* fail silently — defaults remain visible */ }
+}
+
+// ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
 async function init() {
   await initSession();
+  applySiteContent();  // load dynamic content (non-blocking)
   const hash = location.hash.slice(1) || 'home';
   showPage(hash);
 }
