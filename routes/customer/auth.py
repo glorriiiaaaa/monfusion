@@ -140,13 +140,14 @@ def api_profile_update():
 # ── FORGOT PASSWORD ──────────────────────────────────────
 
 import secrets
+import os
 import requests
 from datetime import datetime, timedelta
 
 # Configure Brevo API
-BREVO_API_KEY = "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"
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "")
 FROM_EMAIL    = "noreply@brevo.com"
-SITE_URL      = "http://localhost:5000"
+SITE_URL      = os.environ.get("SITE_URL", "http://localhost:5000")
 
 
 def _send_reset_email(to_email, token, user_name):
