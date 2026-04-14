@@ -140,50 +140,83 @@ def api_profile_update():
 # ── FORGOT PASSWORD ──────────────────────────────────────
 
 import secrets
-import smtplib
-from email.mime.text import MIMEText
+import requests
 from datetime import datetime, timedelta
 
-# Configure these in production via environment variables
-SMTP_HOST     = "smtp.gmail.com"
-SMTP_PORT     = 587
-SMTP_USER     = ""          # e.g. yourapp@gmail.com
-SMTP_PASSWORD = ""          # App password (not your Gmail password)
-FROM_EMAIL    = "noreply@monsfusion.com"
+# Configure Brevo API
+BREVO_API_KEY = "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"
+FROM_EMAIL    = "noreply@brevo.com"
 SITE_URL      = "http://localhost:5000"
 
 
 def _send_reset_email(to_email, token, user_name):
-    """Send the reset link via SMTP. Prints link to console if SMTP not configured."""
+    """Send the reset link via Brevo API. Prints link to console if API key not configured."""
     reset_link = f"{SITE_URL}/#reset-password?token={token}"
-    body = f"""Hi {user_name},
-
-We received a request to reset your MonsFusion password.
-
-Click the link below to reset it (valid for 1 hour):
-{reset_link}
-
-If you didn't request this, you can safely ignore this email.
-
-— Team MonsFusion
-"""
-    if not SMTP_USER:
+    
+    print(f"\n{'='*60}")
+    print(f"  EMAIL SENDING DEBUG")
+    print(f"  To: {to_email}")
+    print(f"  Link: {reset_link}")
+    print(f"  API Key configured: {bool(BREVO_API_KEY)}")
+    print(f"{'='*60}\n")
+    
+    if not BREVO_API_KEY:
         # Dev mode: print to console instead of sending
         print(f"\n{'='*60}")
-        print(f"  PASSWORD RESET LINK (dev mode — SMTP not configured)")
+        print(f"  PASSWORD RESET LINK (dev mode — Brevo API not configured)")
         print(f"  To: {to_email}")
         print(f"  Link: {reset_link}")
         print(f"{'='*60}\n")
         return
 
-    msg = MIMEText(body)
-    msg["Subject"] = "Reset your MonsFusion password"
-    msg["From"]    = FROM_EMAIL
-    msg["To"]      = to_email
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as s:
-        s.starttls()
-        s.login(SMTP_USER, SMTP_PASSWORD)
-        s.sendmail(FROM_EMAIL, to_email, msg.as_string())
+    try:
+        url = "https://api.brevo.com/v3/smtp/email"
+        headers = {
+            "accept": "application/json",
+            "api-key": BREVO_API_KEY,
+            "content-type": "application/json"
+        }
+        
+        html_content = f"""
+        <html>
+        <body>
+            <h2>Password Reset Request</h2>
+            <p>Hi {user_name},</p>
+            <p>We received a request to reset your MonsFusion password.</p>
+            <p>Click the button below to reset it (valid for 1 hour):</p>
+            <p>
+                <a href="{reset_link}" style="background:#ff4f8b;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;display:inline-block;">Reset Password</a>
+            </p>
+            <p>Or copy this link to your browser:</p>
+            <p>{reset_link}</p>
+            <p>If you didn't request this, you can safely ignore this email.</p>
+            <p>— Team MonsFusion</p>
+        </body>
+        </html>
+        """
+        
+        data = {
+            "sender": {"name": "MonsFusion", "email": FROM_EMAIL},
+            "to": [{"email": to_email, "name": user_name}],
+            "subject": "Reset your MonsFusion password",
+            "htmlContent": html_content
+        }
+        
+        print(f"Sending request to Brevo API...")
+        response = requests.post(url, headers=headers, json=data)
+        print(f"Brevo API Response Status: {response.status_code}")
+        print(f"Brevo API Response Body: {response.text}")
+        response.raise_for_status()
+        print(f"✅ Reset email sent successfully to {to_email}")
+        
+    except Exception as e:
+        print(f"❌ Failed to send email via Brevo: {e}")
+        # Fallback to console output
+        print(f"\n{'='*60}")
+        print(f"  PASSWORD RESET LINK (email send failed)")
+        print(f"  To: {to_email}")
+        print(f"  Link: {reset_link}")
+        print(f"{'='*60}\n")
 
 
 @bp.route("/api/forgot-password", methods=["POST"])

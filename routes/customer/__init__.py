@@ -6,6 +6,7 @@ from routes.customer.coupon import bp as coupon_bp
 from routes.customer.orders import bp as orders_bp
 from routes.customer.reviews import bp as reviews_bp
 from routes.customer.contact import bp as contact_bp
+from routes.customer.location import bp as location_bp
 
 customer_blueprints = [
     auth_bp,
@@ -16,6 +17,7 @@ customer_blueprints = [
     orders_bp,
     reviews_bp,
     contact_bp,
+    location_bp,
 ]
 
 __all__ = ["customer_blueprints"]

@@ -89,6 +89,16 @@
             <div class="form-group"><label>Copyright Text</label><input type="text" id="sc_footer_copyright" class="form-control" placeholder="© 2024 Mons Fusion. All rights reserved."></div>
           </div>
 
+          <!-- API KEYS -->
+          <div class="card" style="padding:24px">
+            <h3 style="font-size:.95rem;font-weight:700;margin-bottom:18px">🔑 API Keys</h3>
+            <div class="form-group">
+              <label>CountryStateCity API Key</label>
+              <input type="text" id="sc_csc_api_key" class="form-control" placeholder="Enter your API key from countrystatecity.in">
+              <p style="font-size:.75rem;color:var(--dg);margin-top:6px">Get a free API key from <a href="https://countrystatecity.in/" target="_blank" style="color:var(--ac)">countrystatecity.in</a> to enable dynamic city dropdown in checkout form.</p>
+            </div>
+          </div>
+
           <div style="display:flex;gap:12px;justify-content:flex-end">
             <button class="btn btn-ghost btn-sm" onclick="loadSiteContent()">↺ Reset</button>
             <button class="btn btn-primary" onclick="saveSiteContent()" id="scSaveBtn">💾 Save Changes</button>

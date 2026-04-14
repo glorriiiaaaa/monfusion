@@ -52,49 +52,51 @@
       <div class="form-row">
         <div class="form-group">
           <label>City *</label>
-          <input type="text" id="ckCity" class="form-control" placeholder="Your city" oninput="validateChk('ckCity')">
-          <span class="form-error" id="ckCity-e">Enter a valid city name (letters only, min 2 chars)</span>
+          <select id="ckCity" class="form-control" onchange="validateChk('ckCity')">
+            <option value="">-- Select State First --</option>
+          </select>
+          <span class="form-error" id="ckCity-e">Please select a valid city</span>
         </div>
         <div class="form-group">
           <label>State *</label>
-          <select id="ckState" class="form-control" onchange="validateChk('ckState')">
+          <select id="ckState" class="form-control" onchange="onStateChange()">
             <option value="">-- Select State --</option>
-            <option>Andhra Pradesh</option>
-            <option>Arunachal Pradesh</option>
-            <option>Assam</option>
-            <option>Bihar</option>
-            <option>Chhattisgarh</option>
-            <option>Goa</option>
-            <option>Gujarat</option>
-            <option>Haryana</option>
-            <option>Himachal Pradesh</option>
-            <option>Jharkhand</option>
-            <option>Karnataka</option>
-            <option>Kerala</option>
-            <option>Madhya Pradesh</option>
-            <option>Maharashtra</option>
-            <option>Manipur</option>
-            <option>Meghalaya</option>
-            <option>Mizoram</option>
-            <option>Nagaland</option>
-            <option>Odisha</option>
-            <option>Punjab</option>
-            <option>Rajasthan</option>
-            <option>Sikkim</option>
-            <option>Tamil Nadu</option>
-            <option>Telangana</option>
-            <option>Tripura</option>
-            <option>Uttar Pradesh</option>
-            <option>Uttarakhand</option>
-            <option>West Bengal</option>
-            <option>Andaman and Nicobar Islands</option>
-            <option>Chandigarh</option>
-            <option>Dadra and Nagar Haveli and Daman and Diu</option>
-            <option>Delhi</option>
-            <option>Jammu and Kashmir</option>
-            <option>Ladakh</option>
-            <option>Lakshadweep</option>
-            <option>Puducherry</option>
+            <option value="AP">Andhra Pradesh</option>
+            <option value="AR">Arunachal Pradesh</option>
+            <option value="AS">Assam</option>
+            <option value="BR">Bihar</option>
+            <option value="CT">Chhattisgarh</option>
+            <option value="GA">Goa</option>
+            <option value="GJ">Gujarat</option>
+            <option value="HR">Haryana</option>
+            <option value="HP">Himachal Pradesh</option>
+            <option value="JH">Jharkhand</option>
+            <option value="KA">Karnataka</option>
+            <option value="KL">Kerala</option>
+            <option value="MP">Madhya Pradesh</option>
+            <option value="MH">Maharashtra</option>
+            <option value="MN">Manipur</option>
+            <option value="ML">Meghalaya</option>
+            <option value="MZ">Mizoram</option>
+            <option value="NL">Nagaland</option>
+            <option value="OD">Odisha</option>
+            <option value="PB">Punjab</option>
+            <option value="RJ">Rajasthan</option>
+            <option value="SK">Sikkim</option>
+            <option value="TN">Tamil Nadu</option>
+            <option value="TG">Telangana</option>
+            <option value="TR">Tripura</option>
+            <option value="UP">Uttar Pradesh</option>
+            <option value="UT">Uttarakhand</option>
+            <option value="WB">West Bengal</option>
+            <option value="AN">Andaman and Nicobar Islands</option>
+            <option value="CH">Chandigarh</option>
+            <option value="DD">Dadra and Nagar Haveli and Daman and Diu</option>
+            <option value="DL">Delhi</option>
+            <option value="JK">Jammu and Kashmir</option>
+            <option value="LA">Ladakh</option>
+            <option value="LD">Lakshadweep</option>
+            <option value="PY">Puducherry</option>
           </select>
           <span class="form-error" id="ckState-e">Please select a valid Indian state</span>
         </div>

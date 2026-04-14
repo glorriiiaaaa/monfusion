@@ -1,4 +1,5 @@
 import json
+import requests
 from flask import Blueprint, jsonify, request
 from auth_utils import require_admin
 from db_utils import db
@@ -42,6 +43,8 @@ DEFAULTS = {
     # Footer
     "footer_desc":      "Creating magical customised gifts for every special moment. Made with love, delivered with care.",
     "footer_copyright": "© 2024 Mons Fusion. All rights reserved. Made with ❤️ in India.",
+    # API Keys
+    "csc_api_key":      "66f05bdc25202c6f16814bd990d752d98588136047078c0e3a129858841de8e3",
 }
 
 
@@ -158,3 +161,30 @@ def update_festival():
     data = _get_festival(c)
     c.close()
     return jsonify({"success": True, "festival": data})
+
+
+# ── COUNTRY STATE CITY API ─────────────────────────────────────────
+@bp.route("/api/admin/csc-api-key", methods=["GET"])
+@require_admin
+def get_csc_api_key():
+    c = db()
+    content = _get_content(c)
+    c.close()
+    return jsonify({"api_key": content.get("csc_api_key", "")})
+
+
+@bp.route("/api/admin/csc-api-key", methods=["PUT"])
+@require_admin
+def update_csc_api_key():
+    d = request.json or {}
+    api_key = d.get("api_key", "").strip()
+    c = db()
+    current = _get_content(c)
+    current["csc_api_key"] = api_key
+    c.execute(
+        "INSERT OR REPLACE INTO site_settings(key,value) VALUES(?,?)",
+        (CONTENT_KEY, json.dumps(current)),
+    )
+    c.commit()
+    c.close()
+    return jsonify({"success": True, "api_key": api_key})
