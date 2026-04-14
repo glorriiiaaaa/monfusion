@@ -11,6 +11,7 @@
 ╚══════════════════════════════════════════════════════════════════╝
 """
 
+import os
 from flask import Flask
 
 from db_utils import init_db
@@ -31,6 +32,9 @@ for bp in admin_blueprints:
 
 if __name__ == "__main__":
     init_db()
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
+    
     print("\n" + "=" * 62)
     print("  🎁  MONS FUSION — Full Stack App Ready!")
     print("=" * 62)
@@ -46,4 +50,4 @@ if __name__ == "__main__":
     print("      Username: ParabStore")
     print("      Password: Parab@29")
     print("=" * 62 + "\n")
-    app.run(debug=True, port=5000)
+    app.run(debug=debug, host="0.0.0.0", port=port)
