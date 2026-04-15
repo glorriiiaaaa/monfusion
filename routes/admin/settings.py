@@ -15,7 +15,7 @@ DEFAULTS = {
     "hero_subtitle":  "Discover magical customised gifts — polaroids, albums, frames & more — lovingly crafted for your most special moments.",
     "hero_image":     "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=700",
     # Announcement bar
-    "marquee_text":   "🎁 FREE DELIVERY ABOVE ₹499 &nbsp;|&nbsp; ✨ CUSTOM POLAROIDS FROM ₹199 &nbsp;|&nbsp; 💝 COUPLE GIFTS & BIRTHDAY HAMPERS &nbsp;|&nbsp; 🌟 FEST SPECIALS AVAILABLE &nbsp;|&nbsp; 🎀 GIFTS FOR HER & HIM",
+    "marquee_text":   "🎁 CUSTOM POLAROIDS FROM ₹199 &nbsp;|&nbsp; 💝 COUPLE GIFTS & BIRTHDAY HAMPERS &nbsp;|&nbsp; 🌟 FEST SPECIALS AVAILABLE &nbsp;|&nbsp; 🎀 GIFTS FOR HER & HIM",
     # Stats (shared across hero, stats bar, about)
     "stat1_val":   "10K+",  "stat1_label": "Happy Customers",
     "stat2_val":   "50+",   "stat2_label": "Unique Products",

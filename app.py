@@ -32,14 +32,14 @@ for bp in admin_blueprints:
 
 if __name__ == "__main__":
     init_db()
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5001))
     debug = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
     
     print("\n" + "=" * 62)
     print("  🎁  MONS FUSION — Full Stack App Ready!")
     print("=" * 62)
-    print("  🌐  Customer:  http://localhost:5000/")
-    print("  🔐  Admin:     http://localhost:5000/admin")
+    print("  🌐  Customer:  http://localhost:5001/")
+    print("  🔐  Admin:     http://localhost:5001/admin")
     print("  📦  DB:        mf_v2.db (auto-created)")
     print()
     print("  👤  DEMO LOGIN (Customer):")

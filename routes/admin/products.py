@@ -96,14 +96,15 @@ def admin_add_product():
 
     c = db()
     cur = c.execute(
-        """INSERT INTO products(name, price, discount, description, category, subcategory,
+        """INSERT INTO products(name, price, discount, min_quantity, description, category, subcategory,
                  gender_tag, is_best_seller, is_festival_special, is_most_liked,
                  image_url, images, active)
-           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1)""",
+           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1)""",
         (
             name,
             d.get("price", 0),
             d.get("discount", 0),
+            d.get("min_quantity", 1),
             d.get("description", ""),
             d.get("category", ""),
             d.get("subcategory", ""),
@@ -148,7 +149,7 @@ def admin_update_product(pid):
     c = db()
     c.execute(
         """UPDATE products
-           SET name=?, price=?, discount=?, description=?, category=?, subcategory=?,
+           SET name=?, price=?, discount=?, min_quantity=?, description=?, category=?, subcategory=?,
                gender_tag=?, is_best_seller=?, is_festival_special=?, is_most_liked=?,
                image_url=?, images=?, active=?
            WHERE id=?""",
@@ -156,6 +157,7 @@ def admin_update_product(pid):
             d.get("name", ""),
             d.get("price", 0),
             d.get("discount", 0),
+            d.get("min_quantity", 1),
             d.get("description", ""),
             d.get("category", ""),
             d.get("subcategory", ""),

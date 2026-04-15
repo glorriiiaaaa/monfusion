@@ -446,17 +446,22 @@ select.form-control option{background:var(--card2)}
     </div>
     <div class="form-row">
       <div class="form-group">
+        <label>Min Quantity</label>
+        <input type="number" id="pMinQty" class="form-control" placeholder="1" min="1" value="1">
+        <span style="font-size:.75rem;color:#666;margin-top:4px;display:block">Minimum order quantity (default: 1)</span>
+      </div>
+      <div class="form-group">
         <label>Category</label>
         <select id="pCategory" class="form-control">
           <option value="">Loading categories...</option>
         </select>
       </div>
+    </div>
+    <div class="form-row">
       <div class="form-group">
         <label>Subcategory</label>
         <input type="text" id="pSubcat" class="form-control" placeholder="e.g. polaroid-set">
       </div>
-    </div>
-    <div class="form-row">
       <div class="form-group">
         <label>Gender Tag</label>
         <select id="pGender" class="form-control">
@@ -467,12 +472,17 @@ select.form-control option{background:var(--card2)}
           <option value="parents">For Parents</option>
         </select>
       </div>
+    </div>
+    <div class="form-row">
       <div class="form-group">
         <label>Status</label>
         <select id="pActive" class="form-control">
           <option value="1">Active</option>
           <option value="0">Inactive</option>
         </select>
+      </div>
+      <div class="form-group">
+        <label></label>
       </div>
     </div>
     <div class="form-group">
@@ -1004,6 +1014,7 @@ function openProductModal(product=null) {
   // Reset form
   ['pName','pPrice','pDiscount','pSubcat','pDesc'].forEach(id=>document.getElementById(id).value='');
   ['pGender'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pMinQty').value='1';
   document.getElementById('pActive').value='1';
   ['pBestSeller','pFestival','pMostLiked'].forEach(id=>document.getElementById(id).checked=false);
   document.getElementById('imgUrlInput').value='';
@@ -1020,6 +1031,7 @@ function editProduct(id) {
   document.getElementById('pName').value = p.name||'';
   document.getElementById('pPrice').value = p.price||0;
   document.getElementById('pDiscount').value = p.discount||0;
+  document.getElementById('pMinQty').value = p.min_quantity||1;
   populateCategoryDropdown(p.category||'');
   document.getElementById('pSubcat').value = p.subcategory||'';
   document.getElementById('pGender').value = p.gender_tag||'';
@@ -1067,6 +1079,7 @@ async function saveProduct() {
 
   const body = {
     name, price, discount:parseInt(document.getElementById('pDiscount').value)||0,
+    min_quantity:parseInt(document.getElementById('pMinQty').value)||1,
     description:document.getElementById('pDesc').value.trim(),
     category:document.getElementById('pCategory').value,
     subcategory:document.getElementById('pSubcat').value.trim(),

@@ -14,6 +14,7 @@ def db():
 
 
 def init_db():
+    """Create tables and seed initial data."""
     c = db()
     c.executescript("""
     CREATE TABLE IF NOT EXISTS users(
@@ -32,6 +33,7 @@ def init_db():
         is_festival_special INTEGER DEFAULT 0,
         is_most_liked INTEGER DEFAULT 0,
         image_url TEXT, images TEXT, active INTEGER DEFAULT 1,
+        min_quantity INTEGER DEFAULT 1,
         created_at TEXT DEFAULT(datetime('now'))
     );
     CREATE TABLE IF NOT EXISTS orders(
@@ -91,6 +93,13 @@ def init_db():
     # Migrate existing reviews table — add images column if missing
     try:
         c.execute("ALTER TABLE reviews ADD COLUMN images TEXT")
+        c.commit()
+    except Exception:
+        pass  # Column already exists
+    
+    # Migrate existing products table — add min_quantity column if missing
+    try:
+        c.execute("ALTER TABLE products ADD COLUMN min_quantity INTEGER DEFAULT 1")
         c.commit()
     except Exception:
         pass  # Column already exists

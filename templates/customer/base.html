@@ -3146,7 +3146,7 @@
     let allProducts = [];
     let currentProductId = null;
     let currentQty = 1;
-    let currentMinQty = 1;  // set to 10 for specific polaroid products
+    let currentMinQty = 1;
     let activeCoupon = null;
     let checkoutTotal = 0;
 
@@ -3612,14 +3612,6 @@
     // ═══════════════════════════════════════════
     //  PRODUCT DETAIL
     // ═══════════════════════════════════════════
-    // Products requiring minimum order quantity of 10
-    const MIN_QTY_10_PRODUCTS = [
-      '1 large laminated polaroid',
-      '1 large glossy polaroid',
-      '1 regular laminated polaroid',
-      '1 regular glossy polaroid',
-    ];
-
     async function openProduct(pid) {
       currentProductId = pid;
       currentQty = 1;
@@ -3695,13 +3687,17 @@
         // Reviews
         renderReviews(p);
 
-        // Apply minimum quantity rule for specific polaroid products
-        if (MIN_QTY_10_PRODUCTS.includes(p.name.toLowerCase())) {
-          currentMinQty = 10;
-          currentQty = 10;
-          document.getElementById('pdQtyNum').textContent = 10;
+        // Apply minimum quantity from database
+        const minQty = p.min_quantity || 1;
+        if (minQty > 1) {
+          currentMinQty = minQty;
+          currentQty = minQty;
+          document.getElementById('pdQtyNum').textContent = minQty;
           const note = document.getElementById('pdMinQtyNote');
-          if (note) note.style.display = '';
+          if (note) {
+            note.textContent = `⚠️ Minimum order quantity: ${minQty}`;
+            note.style.display = '';
+          }
         }
 
         // Related
@@ -3868,6 +3864,14 @@
         return;
       }
       try {
+        // Get product details to check minimum quantity
+        const p = await API.get(`/api/products/${pid}`);
+        const minQty = p.min_quantity || 1;
+        if (qty < minQty) {
+          showToast(`Minimum order quantity is ${minQty}`, 'error');
+          return;
+        }
+        
         const d = await API.post('/api/cart/add', { product_id: pid, quantity: qty });
         if (d.error) { showToast(d.error, 'error'); return; }
         showToast('Added to cart! 🛍', 'success');
