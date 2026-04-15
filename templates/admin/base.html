@@ -671,7 +671,7 @@ async function checkAdminSession() {
 //  INIT
 // ═══════════════════════════════════════════════════════
 async function initAdminApp() {
-  await Promise.all([refreshDashboard(), loadProducts(), loadPendingCount()]);
+  await Promise.all([refreshDashboard(), loadProducts(), loadPendingCount(), loadCategories()]);
 }
 
 function startClock() {
