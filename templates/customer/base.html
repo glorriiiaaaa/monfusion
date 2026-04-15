@@ -4335,6 +4335,10 @@
           <div class="profile-avatar">${pr.name[0].toUpperCase()}</div>
           <div class="profile-name">${pr.name}</div>
           <div class="profile-email">${pr.email}</div>
+          <div style="margin-top:24px">
+            <button class="profile-nav-item active" onclick="openTab('details',this)">👤 Profile Details</button>
+            <button class="profile-nav-item" onclick="openTab('orders',this)">📦 My Orders</button>
+          </div>
         </div>
         <div class="profile-content">
           <div class="tab-panel active" id="tabDetails">
