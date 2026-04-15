@@ -463,14 +463,13 @@ select.form-control option{background:var(--card2)}
         <input type="text" id="pSubcat" class="form-control" placeholder="e.g. polaroid-set">
       </div>
       <div class="form-group">
-        <label>Gender Tag</label>
-        <select id="pGender" class="form-control">
-          <option value="">None</option>
-          <option value="her">For Her</option>
-          <option value="him">For Him</option>
-          <option value="friends">For Friends</option>
-          <option value="parents">For Parents</option>
-        </select>
+        <label>Gender Tag (select multiple)</label>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <label class="fopt"><input type="checkbox" name="pGender" value="her"> For Her</label>
+          <label class="fopt"><input type="checkbox" name="pGender" value="him"> For Him</label>
+          <label class="fopt"><input type="checkbox" name="pGender" value="friends"> For Friends</label>
+          <label class="fopt"><input type="checkbox" name="pGender" value="parents"> For Parents</label>
+        </div>
       </div>
     </div>
     <div class="form-row">
@@ -596,7 +595,7 @@ const API = {
     return d;
   },
   async post(url, body) {
-    const r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body || {})});
     const d = await r.json(); if(!r.ok) throw d; return d;
   },
   async put(url, body) {
@@ -1013,7 +1012,7 @@ function openProductModal(product=null) {
   populateCategoryDropdown('');
   // Reset form
   ['pName','pPrice','pDiscount','pSubcat','pDesc'].forEach(id=>document.getElementById(id).value='');
-  ['pGender'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('input[name="pGender"]').forEach(cb=>cb.checked=false);
   document.getElementById('pMinQty').value='1';
   document.getElementById('pActive').value='1';
   ['pBestSeller','pFestival','pMostLiked'].forEach(id=>document.getElementById(id).checked=false);
@@ -1026,15 +1025,26 @@ function openProductModal(product=null) {
 function editProduct(id) {
   const p = allProducts.find(x=>x.id===id);
   if (!p) return;
-  document.getElementById('editProductId').value = id;
+  document.getElementById('editProductId').value = p.id;
   document.getElementById('productModalTitle').textContent = 'Edit Product';
+  document.getElementById('saveProductBtn').textContent = '💾 Update Product';
   document.getElementById('pName').value = p.name||'';
   document.getElementById('pPrice').value = p.price||0;
   document.getElementById('pDiscount').value = p.discount||0;
   document.getElementById('pMinQty').value = p.min_quantity||1;
   populateCategoryDropdown(p.category||'');
   document.getElementById('pSubcat').value = p.subcategory||'';
-  document.getElementById('pGender').value = p.gender_tag||'';
+  // Handle multiple gender tags
+  document.querySelectorAll('input[name="pGender"]').forEach(cb=>cb.checked=false);
+  if (p.gender_tag) {
+    const tags = typeof p.gender_tag === 'string' ? JSON.parse(p.gender_tag) : p.gender_tag;
+    if (Array.isArray(tags)) {
+      tags.forEach(tag => {
+        const cb = document.querySelector(`input[name="pGender"][value="${tag}"]`);
+        if (cb) cb.checked = true;
+      });
+    }
+  }
   document.getElementById('pDesc').value = p.description||'';
   document.getElementById('pActive').value = p.active?'1':'0';
   document.getElementById('pBestSeller').checked = !!p.is_best_seller;
@@ -1083,7 +1093,7 @@ async function saveProduct() {
     description:document.getElementById('pDesc').value.trim(),
     category:document.getElementById('pCategory').value,
     subcategory:document.getElementById('pSubcat').value.trim(),
-    gender_tag:document.getElementById('pGender').value,
+    gender_tag: Array.from(document.querySelectorAll('input[name="pGender"]:checked')).map(cb => cb.value),
     is_best_seller:document.getElementById('pBestSeller').checked,
     is_festival_special:document.getElementById('pFestival').checked,
     is_most_liked:document.getElementById('pMostLiked').checked,
@@ -1438,7 +1448,7 @@ function filterCustomers() {
 
 function renderCustomersTable(customers) {
   const tbody = document.getElementById('customersTbody');
-  if (!customers.length) { tbody.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div class="ei">👥</div><h3>No customers found</h3></div></td></tr>`; return; }
+  if (!customers.length) { tbody.innerHTML=`<tr><td colspan="8"><div class="empty-state"><div class="ei">👥</div><h3>No customers found</h3></div></td></tr>`; return; }
   tbody.innerHTML = customers.map((c,i)=>`
     <tr>
       <td style="color:var(--dg);font-size:.8rem">${i+1}</td>
@@ -1452,8 +1462,39 @@ function renderCustomersTable(customers) {
       <td style="font-size:.82rem;color:var(--dg)">${c.phone||'—'}</td>
       <td><span class="badge badge-blue">${c.order_count}</span></td>
       <td><span style="font-family:var(--mono);font-weight:700;color:var(--green)">₹${fmtNum(c.total_spent)}</span></td>
-      <td style="font-size:.75rem;color:var(--dg)">${fmtDate(c.created_at)}</td>
+      <td><span class="badge ${c.active ? 'badge-green' : 'badge-red'}">${c.active ? 'Active' : 'Inactive'}</span></td>
+      <td>
+        <div style="display:flex;gap:6px">
+          ${c.active ? `<button class="btn btn-ghost btn-sm" onclick="toggleCustomerStatus(${c.id}, false)" title="Deactivate">🔴</button>` : `<button class="btn btn-ghost btn-sm" onclick="toggleCustomerStatus(${c.id}, true)" title="Activate">🟢</button>`}
+          <button class="btn btn-danger btn-sm" onclick="deleteCustomer(${c.id}, '${c.name.replace(/'/g, "\\'")}')" title="Delete">🗑</button>
+        </div>
+      </td>
     </tr>`).join('');
+}
+
+async function toggleCustomerStatus(uid, activate) {
+  try {
+    const endpoint = activate ? `/api/admin/customers/${uid}/activate` : `/api/admin/customers/${uid}/deactivate`;
+    await API.post(endpoint, {});
+    const customer = allCustomers.find(c => c.id === uid);
+    if (customer) customer.active = activate ? 1 : 0;
+    renderCustomersTable(allCustomers);
+    toast(activate ? 'Customer activated' : 'Customer deactivated', 'success');
+  } catch(e) {
+    toast('Failed to update customer status', 'error');
+  }
+}
+
+async function deleteCustomer(uid, name) {
+  if (!confirm(`Delete customer "${name}"? This will also delete their cart and wishlist data. This action cannot be undone.`)) return;
+  try {
+    await API.del(`/api/admin/customers/${uid}`);
+    allCustomers = allCustomers.filter(c => c.id !== uid);
+    renderCustomersTable(allCustomers);
+    toast(`Customer "${name}" deleted`, 'success');
+  } catch(e) {
+    toast('Failed to delete customer', 'error');
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1523,7 +1564,9 @@ function renderContactTable(msgs) {
 
 async function markContactRead(id) {
   try {
-    await API.post(`/api/admin/contact-messages/${id}/read`);
+    console.log('Marking message as read:', id);
+    const response = await API.post(`/api/admin/contact-messages/${id}/read`, {});
+    console.log('Mark as read response:', response);
     const msg = allContactMessages.find(m => m.id === id);
     if (msg) msg.is_read = 1;
     filterContactMessages();
@@ -1532,7 +1575,11 @@ async function markContactRead(id) {
     const badge = document.getElementById('unreadBadge');
     if (unread > 0) { badge.textContent = unread; badge.style.display = ''; }
     else { badge.style.display = 'none'; }
-  } catch(e) { toast('Failed to mark as read', 'error'); }
+    toast('Marked as read', 'success');
+  } catch(e) {
+    console.error('Failed to mark as read:', e);
+    toast('Failed to mark as read: ' + (e.error || e.message), 'error');
+  }
 }
 
 async function deleteContactMsg(id) {

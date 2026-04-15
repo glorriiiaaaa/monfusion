@@ -88,7 +88,7 @@ def admin_analytics():
 def admin_customers():
     c = db()
     users = c.execute(
-        "SELECT id,name,email,phone,created_at FROM users ORDER BY created_at DESC"
+        "SELECT id,name,email,phone,created_at,active FROM users ORDER BY created_at DESC"
     ).fetchall()
     result = []
     for u in users:
@@ -103,3 +103,36 @@ def admin_customers():
         result.append(ud)
     c.close()
     return jsonify(result)
+
+
+@bp.route("/api/admin/customers/<int:uid>/deactivate", methods=["POST"])
+@require_admin
+def deactivate_customer(uid):
+    c = db()
+    c.execute("UPDATE users SET active=0 WHERE id=?", (uid,))
+    c.commit()
+    c.close()
+    return jsonify({"success": True})
+
+
+@bp.route("/api/admin/customers/<int:uid>/activate", methods=["POST"])
+@require_admin
+def activate_customer(uid):
+    c = db()
+    c.execute("UPDATE users SET active=1 WHERE id=?", (uid,))
+    c.commit()
+    c.close()
+    return jsonify({"success": True})
+
+
+@bp.route("/api/admin/customers/<int:uid>", methods=["DELETE"])
+@require_admin
+def delete_customer(uid):
+    c = db()
+    # Delete related data first
+    c.execute("DELETE FROM wishlist WHERE user_id=?", (uid,))
+    c.execute("DELETE FROM cart WHERE user_id=?", (uid,))
+    c.execute("DELETE FROM users WHERE id=?", (uid,))
+    c.commit()
+    c.close()
+    return jsonify({"success": True})

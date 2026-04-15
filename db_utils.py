@@ -103,10 +103,35 @@ def init_db():
         c.commit()
     except Exception:
         pass  # Column already exists
+    
+    # Migrate existing contact_messages table — add is_read column if missing
+    try:
+        c.execute("ALTER TABLE contact_messages ADD COLUMN is_read INTEGER DEFAULT 0")
+        c.commit()
+    except Exception:
+        pass  # Column already exists
+    
+    # Migrate existing products table — convert gender_tag to JSON array format
+    try:
+        products = c.execute("SELECT id, gender_tag FROM products").fetchall()
+        for p in products:
+            if p[1] and not p[1].startswith('['):
+                # Convert single value to array
+                c.execute("UPDATE products SET gender_tag=? WHERE id=?", (json.dumps([p[1]]), p[0]))
+        c.commit()
+    except Exception:
+        pass  # Migration already applied or failed
 
     # Migrate contact_messages table — add phone column if missing
     try:
         c.execute("ALTER TABLE contact_messages ADD COLUMN phone TEXT")
+        c.commit()
+    except Exception:
+        pass  # Column already exists
+    
+    # Migrate users table — add active column if missing
+    try:
+        c.execute("ALTER TABLE users ADD COLUMN active INTEGER DEFAULT 1")
         c.commit()
     except Exception:
         pass  # Column already exists

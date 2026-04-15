@@ -30,8 +30,10 @@ def api_products():
         sql += " AND category=?"
         p.append(cat)
     if gnd:
-        sql += " AND gender_tag=?"
-        p.append(gnd)
+        # Check if gender_tag contains the selected gender (stored as JSON array)
+        sql += " AND (gender_tag LIKE ? OR gender_tag=?)"
+        p.append(f'%"{gnd}"%')
+        p.append(gnd)  # For backward compatibility with old single values
     if mn:
         sql += " AND price>=?"
         p.append(mn)

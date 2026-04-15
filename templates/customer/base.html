@@ -3579,18 +3579,29 @@
 
     function setFilter(key, val) {
       if (key === 'category') {
-        const el = document.querySelector(`input[name=fcat][value="${val}"]`);
-        if (el) el.checked = true;
+        // Wait for categories to load if not yet loaded
+        const checkAndSetCategory = setInterval(() => {
+          const el = document.querySelector(`input[name=fcat][value="${val}"]`);
+          if (el) {
+            el.checked = true;
+            clearInterval(checkAndSetCategory);
+            applyFilters();
+          }
+        }, 50);
+        // Timeout after 2 seconds
+        setTimeout(() => clearInterval(checkAndSetCategory), 2000);
       } else if (key === 'gender') {
         const el = document.querySelector(`input[name=fgnd][value="${val}"]`);
         if (el) el.checked = true;
+        applyFilters();
       } else if (key === 'best_seller') {
         document.getElementById('fBestSeller').checked = true;
+        applyFilters();
       } else if (key === 'max_price') {
         document.getElementById('maxPriceRange').value = val;
         document.getElementById('maxPriceLabel').textContent = val;
+        applyFilters();
       }
-      applyFilters();
     }
 
     function toggleFilter() {

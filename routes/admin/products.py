@@ -43,11 +43,19 @@ def _validate_base64_image(data_url: str) -> bool:
 
 def _sanitize_images(images: list) -> list:
     """
-    Filter image list: keep only valid base64 data URLs, cap at MAX_IMAGES.
+    Filter image list: keep only valid base64 data URLs or regular URLs, cap at MAX_IMAGES.
     """
     if not isinstance(images, list):
         return []
-    valid = [img for img in images if _validate_base64_image(img)]
+    valid = []
+    for img in images:
+        if isinstance(img, str) and img.strip():
+            # Accept regular URLs (http/https)
+            if img.startswith("http://") or img.startswith("https://"):
+                valid.append(img)
+            # Accept base64 data URLs
+            elif _validate_base64_image(img):
+                valid.append(img)
     return valid[:MAX_IMAGES]
 
 
@@ -108,7 +116,7 @@ def admin_add_product():
             d.get("description", ""),
             d.get("category", ""),
             d.get("subcategory", ""),
-            d.get("gender_tag", ""),
+            json.dumps(d.get("gender_tag", [])),
             1 if d.get("is_best_seller") else 0,
             1 if d.get("is_festival_special") else 0,
             1 if d.get("is_most_liked") else 0,
@@ -161,7 +169,7 @@ def admin_update_product(pid):
             d.get("description", ""),
             d.get("category", ""),
             d.get("subcategory", ""),
-            d.get("gender_tag", ""),
+            json.dumps(d.get("gender_tag", [])),
             1 if d.get("is_best_seller") else 0,
             1 if d.get("is_festival_special") else 0,
             1 if d.get("is_most_liked") else 0,
