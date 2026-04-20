@@ -39,3 +39,16 @@ def admin_update_order_status(oid):
     c.commit()
     c.close()
     return jsonify({"success": True})
+
+
+@bp.route("/api/admin/orders/<string:oid>", methods=["DELETE"])
+@require_admin
+def admin_delete_order(oid):
+    c = db()
+    # Delete order items first
+    c.execute("DELETE FROM order_items WHERE order_id=?", (oid,))
+    # Delete the order
+    c.execute("DELETE FROM orders WHERE order_id=?", (oid,))
+    c.commit()
+    c.close()
+    return jsonify({"success": True})

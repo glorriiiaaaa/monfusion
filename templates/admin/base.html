@@ -1276,7 +1276,7 @@ async function updateOrderStatus(orderId, status) {
 async function deleteOrder(orderId) {
   if (!confirm(`Delete order ${orderId}? This cannot be undone.`)) return;
   try {
-    await API.delete(`/api/admin/orders/${orderId}`);
+    await API.del(`/api/admin/orders/${orderId}`);
     toast(`Order ${orderId} deleted`, 'success');
     allOrders = allOrders.filter(o => o.order_id !== orderId);
     renderOrderSummaryBadges();
