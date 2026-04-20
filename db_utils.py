@@ -39,7 +39,7 @@ def init_db():
     CREATE TABLE IF NOT EXISTS orders(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER, order_id TEXT UNIQUE,
-        total_price REAL, status TEXT DEFAULT 'pending',
+        total_price REAL, delivery_fee REAL DEFAULT 80, status TEXT DEFAULT 'pending',
         address TEXT, customer_name TEXT, phone TEXT,
         email TEXT, payment_method TEXT, coupon_code TEXT,
         created_at TEXT DEFAULT(datetime('now'))
@@ -144,6 +144,13 @@ def init_db():
             c.commit()
         except Exception:
             pass  # Column already exists
+
+    # Migrate orders table — add delivery_fee column if missing
+    try:
+        c.execute("ALTER TABLE orders ADD COLUMN delivery_fee REAL DEFAULT 80")
+        c.commit()
+    except Exception:
+        pass  # Column already exists
 
     if not c.execute("SELECT COUNT(*) FROM products").fetchone()[0]:
         _seed_products(c)

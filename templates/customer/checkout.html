@@ -51,13 +51,6 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>City *</label>
-          <select id="ckCity" class="form-control" onchange="validateChk('ckCity')">
-            <option value="">-- Select State First --</option>
-          </select>
-          <span class="form-error" id="ckCity-e">Please select a valid city</span>
-        </div>
-        <div class="form-group">
           <label>State *</label>
           <select id="ckState" class="form-control" onchange="onStateChange()">
             <option value="">-- Select State --</option>
@@ -99,6 +92,13 @@
             <option value="PY">Puducherry</option>
           </select>
           <span class="form-error" id="ckState-e">Please select a valid Indian state</span>
+        </div>
+        <div class="form-group">
+          <label>City *</label>
+          <select id="ckCity" class="form-control" onchange="validateChk('ckCity')">
+            <option value="">-- Select State First --</option>
+          </select>
+          <span class="form-error" id="ckCity-e">Please select a valid city</span>
         </div>
       </div>
       <div class="form-group" style="max-width:200px">

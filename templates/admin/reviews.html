@@ -1,0 +1,19 @@
+<!-- ══════════════════ REVIEWS ══════════════════ -->
+      <div class="page" id="sec-reviews">
+        <div class="page-head">
+          <div><h2>Customer Reviews</h2><p>Moderate and manage product reviews.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadReviews()">🔄 Refresh</button>
+        </div>
+        <div class="tbl-wrap">
+          <table id="reviewsTable">
+            <thead>
+              <tr>
+                <th>Product</th><th>Customer</th><th>Rating</th><th>Comment</th><th>Date</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reviewsTbody">
+              <tr><td colspan="6" class="loading-state"><div class="spinner big-spin"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>

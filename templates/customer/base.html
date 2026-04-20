@@ -3122,7 +3122,7 @@
             <div style="display:flex;flex-direction:column;gap:10px;font-size:.82rem;color:var(--dg)">
               <div>✅ <strong style="color:var(--tx)">Order Confirmed</strong> — Confirmation sent to your email</div>
               <div>🎨 <strong style="color:var(--tx)">Customisation</strong> — Our team starts crafting your gift</div>
-              <div>🚚 <strong style="color:var(--tx)">Delivered in 3–5 Days</strong> — Packaged beautifully</div>
+              <div>🚚 <strong style="color:var(--tx)">Delivered in 5–7 Days</strong> — Packaged beautifully</div>
             </div>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
@@ -3680,7 +3680,7 @@
           ❤️ Like &nbsp;·&nbsp; <span id="pdLikeCount">${p.likes}</span> likes
         </button>
         <div class="pd-meta">
-          <span>🚚 3–5 Day Delivery</span>
+          <span>🚚 5–7 Day Delivery</span>
           <span>📦 Secure Packaging</span>
           <span>✅ Quality Assured</span>
         </div>
@@ -3940,12 +3940,12 @@
     function updateCartSummary() {
       const sub = cartItems.reduce((s, i) => s + (i.dp * i.quantity), 0);
       const orig = cartItems.reduce((s, i) => s + (i.price * i.quantity), 0);
-      const del = sub > 0 ? 80 : 0;
+      const del = sub > 999 ? 0 : (sub > 0 ? 80 : 0);
       const save = Math.round(orig - sub);
       const tot = Math.round(sub + del);
 
       document.getElementById('sumSubtotal').textContent = `₹${Math.round(sub)}`;
-      document.getElementById('sumDelivery').textContent = `₹${del}`;
+      document.getElementById('sumDelivery').textContent = del === 0 && sub > 0 ? '🎉 FREE' : `₹${del}`;
       document.getElementById('sumSavings').textContent = `-₹${save}`;
       document.getElementById('sumTotal').textContent = `₹${tot}`;
 
@@ -4136,7 +4136,8 @@
 
     function updateCheckoutSummary() {
       const sub = cartItems.reduce((s, i) => s + (i.dp * i.quantity), 0);
-      let del = 80;
+      const isFreeByTotal = sub > 999;
+      let del = isFreeByTotal ? 0 : 80;
       let couponSave = 0;
 
       if (activeCoupon) {
@@ -4148,7 +4149,7 @@
       checkoutTotal = Math.round(sub + del - couponSave);
 
       document.getElementById('ckSubtotal').textContent = `₹${Math.round(sub)}`;
-      document.getElementById('ckDelivery').textContent = `₹${del}${activeCoupon?.free_delivery ? ' 🎉 Free!' : ''}`;
+      document.getElementById('ckDelivery').textContent = del === 0 ? `🎉 FREE${isFreeByTotal ? ' (Above ₹999)' : ''}` : `₹${del}`;
       document.getElementById('ckTotal').textContent = `₹${checkoutTotal}`;
 
       const cr = document.getElementById('ckCouponRow');
@@ -4338,6 +4339,7 @@
           <div style="margin-top:24px">
             <button class="profile-nav-item active" onclick="openTab('details',this)">👤 Profile Details</button>
             <button class="profile-nav-item" onclick="openTab('orders',this)">📦 My Orders</button>
+            <button class="profile-nav-item" onclick="openTab('security',this)">🔒 Security</button>
           </div>
         </div>
         <div class="profile-content">
@@ -4420,6 +4422,23 @@
             <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:22px">My Orders</h3>
             <div id="ordersContainer"><div style="text-align:center;padding:40px"><div class="spinner" style="width:36px;height:36px;border-width:4px;border-top-color:var(--ac);border-color:rgba(255,79,139,.2);margin:0 auto"></div></div></div>
           </div>
+          <div class="tab-panel" id="tabSecurity">
+            <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:22px">🔒 Change Password</h3>
+            <div class="form-group" style="max-width:420px">
+              <label>Current Password</label>
+              <input type="password" id="pwCurrent" class="form-control" placeholder="Enter current password">
+            </div>
+            <div class="form-group" style="max-width:420px">
+              <label>New Password</label>
+              <input type="password" id="pwNew" class="form-control" placeholder="At least 8 characters">
+            </div>
+            <div class="form-group" style="max-width:420px">
+              <label>Confirm New Password</label>
+              <input type="password" id="pwConfirm" class="form-control" placeholder="Repeat new password">
+            </div>
+            <div id="pwError" style="color:#ff1744;font-size:.82rem;margin-bottom:12px;display:none"></div>
+            <button class="btn-primary" onclick="changePassword()" id="changePwBtn">Update Password</button>
+          </div>
         </div>
       </div>`;
       
@@ -4482,6 +4501,7 @@
       document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
       if (el) el.classList.add('active');
       if (tab === 'orders') loadOrders();
+      if (tab === 'security') { /* nothing to load */ }
     }
 
     async function loadOrders() {
@@ -4493,24 +4513,81 @@
           oc.innerHTML = `<div class="empty-state" style="padding:40px 0"><div class="empty-icon">📦</div><h3>No orders yet</h3><p>Start shopping!</p><button class="btn-primary" onclick="showPage('products')">Shop Now</button></div>`;
           return;
         }
-        oc.innerHTML = orders.map(o => `
+        oc.innerHTML = orders.map(o => {
+          const subtotal = (o.items || []).reduce((s, i) => s + (i.price * i.quantity), 0);
+          const deliveryFee = (o.delivery_fee != null) ? o.delivery_fee : (o.total_price - subtotal);
+          const statusColor = { pending:'#ff9800', confirmed:'#2196f3', shipped:'#9c27b0', delivered:'#00c853', cancelled:'#ff1744' }[o.status] || '#888';
+          return `
       <div class="order-card">
         <div class="order-header">
           <div>
             <div class="order-id-tag">${o.order_id}</div>
-            <div style="font-size:.78rem;color:var(--dg);margin-top:3px">${new Date(o.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+            <div style="font-size:.78rem;color:var(--dg);margin-top:3px">
+              🗓 ${new Date(o.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' })}
+            </div>
           </div>
           <div style="text-align:right">
-            <span class="status-badge confirmed">${o.status}</span>
-            <div style="font-size:1rem;font-weight:800;margin-top:4px">₹${o.total_price}</div>
+            <span class="status-badge" style="background:${statusColor}20;color:${statusColor};border:1px solid ${statusColor}40;padding:4px 10px;border-radius:20px;font-size:.78rem;font-weight:700;text-transform:capitalize">${o.status}</span>
           </div>
         </div>
-        <div class="order-items-preview">
-          ${(o.items || []).map(i => `<div class="order-thumb"><img src="${i.image_url}" title="${i.name}" onerror="this.src='https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100'"></div>`).join('')}
+        <div style="margin:14px 0 10px;border-top:1px solid var(--border);padding-top:12px">
+          ${(o.items || []).map(i => `
+          <div style="display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+            <img src="${i.image_url}" onerror="this.src='https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100'"
+              style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:.85rem;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${i.name}</div>
+              <div style="font-size:.76rem;color:var(--dg)">Qty: ${i.quantity} &nbsp;×&nbsp; ₹${i.price}</div>
+            </div>
+            <div style="font-weight:700;font-size:.9rem;flex-shrink:0">₹${Math.round(i.price * i.quantity)}</div>
+          </div>`).join('')}
         </div>
-        <div style="margin-top:12px;font-size:.8rem;color:var(--dg)">📍 ${o.address} &nbsp;|&nbsp; 💳 ${o.payment_method}</div>
-      </div>`).join('');
+        <div style="font-size:.82rem;margin-top:10px">
+          <div style="display:flex;justify-content:space-between;padding:4px 0;color:var(--dg)">
+            <span>Subtotal</span><span>₹${Math.round(subtotal)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;color:var(--dg)">
+            <span>Delivery Charge</span>
+            <span style="color:${deliveryFee === 0 ? '#00c853' : 'inherit'}">${deliveryFee === 0 ? '🎉 FREE' : '₹' + deliveryFee}</span>
+          </div>
+          ${o.coupon_code ? `<div style="display:flex;justify-content:space-between;padding:4px 0;color:#00c853"><span>🎟 Coupon (${o.coupon_code})</span><span>Applied</span></div>` : ''}
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border);margin-top:4px;font-weight:800;font-size:.95rem">
+            <span>Total Paid</span><span>₹${o.total_price}</span>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:10px 12px;background:var(--surface);border-radius:10px;font-size:.79rem;color:var(--dg);line-height:1.7">
+          <div>📍 <strong>Delivery Address:</strong> ${o.address}</div>
+          <div>💳 <strong>Payment:</strong> ${o.payment_method} &nbsp;|&nbsp; 👤 ${o.customer_name} &nbsp;|&nbsp; 📞 ${o.phone}</div>
+        </div>
+      </div>`;
+        }).join('');
       } catch (e) { oc.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Failed to load orders</h3></div>`; }
+    }
+
+    async function changePassword() {
+      const current = document.getElementById('pwCurrent').value;
+      const newPw   = document.getElementById('pwNew').value;
+      const confirm = document.getElementById('pwConfirm').value;
+      const errEl   = document.getElementById('pwError');
+      errEl.style.display = 'none';
+
+      if (!current) { errEl.textContent = 'Please enter your current password'; errEl.style.display = 'block'; return; }
+      if (newPw.length < 8) { errEl.textContent = 'New password must be at least 8 characters'; errEl.style.display = 'block'; return; }
+      if (newPw !== confirm) { errEl.textContent = 'Passwords do not match'; errEl.style.display = 'block'; return; }
+
+      const btn = document.getElementById('changePwBtn');
+      btn.innerHTML = '<span class="spinner"></span> Updating...'; btn.disabled = true;
+      try {
+        const d = await API.post('/api/profile/change-password', { current_password: current, new_password: newPw });
+        if (d.error) { errEl.textContent = d.error; errEl.style.display = 'block'; }
+        else {
+          showToast('Password updated successfully! ✅', 'success');
+          document.getElementById('pwCurrent').value = '';
+          document.getElementById('pwNew').value = '';
+          document.getElementById('pwConfirm').value = '';
+        }
+      } catch(e) { errEl.textContent = 'Failed to update password. Try again.'; errEl.style.display = 'block'; }
+      btn.innerHTML = 'Update Password'; btn.disabled = false;
     }
 
     async function saveProfile() {
