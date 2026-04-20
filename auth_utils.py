@@ -1,8 +1,9 @@
+import os
 from flask import jsonify, session
 from functools import wraps
 
-ADMIN_USER = "ParabStore"
-ADMIN_PASS = "Parab@29"
+ADMIN_USER = os.environ.get("ADMIN_USERNAME", "ParabStore")
+ADMIN_PASS = os.environ.get("ADMIN_PASSWORD", "Parab@29")
 
 
 def require_admin(f):
@@ -23,4 +24,3 @@ def require_user(f):
         return f(*args, **kwargs)
 
     return decorated
-

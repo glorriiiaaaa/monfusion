@@ -6,6 +6,7 @@ from routes.admin.analytics import bp as analytics_bp
 from routes.admin.contact import bp as contact_bp
 from routes.admin.categories import bp as categories_bp
 from routes.admin.settings import bp as settings_bp
+from routes.admin.reviews import bp as reviews_bp
 
 admin_blueprints = [
     auth_bp,
@@ -16,6 +17,7 @@ admin_blueprints = [
     contact_bp,
     categories_bp,
     settings_bp,
+    reviews_bp,
 ]
 
 __all__ = ["admin_blueprints"]

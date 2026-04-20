@@ -63,7 +63,15 @@ def admin_analytics():
         "SELECT COALESCE(AVG(total_price),0) FROM orders WHERE status!='cancelled'"
     ).fetchone()[0]
 
-    total_profit = total_revenue * 0.4
+    # Profit = revenue minus cost of goods (order items price) and delivery fees
+    cost_of_goods = c.execute(
+        "SELECT COALESCE(SUM(oi.price * oi.quantity), 0) FROM order_items oi "
+        "JOIN orders o ON oi.order_id = o.order_id WHERE o.status != 'cancelled'"
+    ).fetchone()[0]
+    delivery_costs = c.execute(
+        "SELECT COALESCE(SUM(delivery_fee), 0) FROM orders WHERE status != 'cancelled'"
+    ).fetchone()[0]
+    total_profit = round(total_revenue - cost_of_goods - delivery_costs, 2)
 
     c.close()
     return jsonify(

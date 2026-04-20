@@ -25,13 +25,14 @@ def admin_add_coupon():
     c = db()
     try:
         cur = c.execute(
-            "INSERT INTO coupons(code,discount_type,discount_value,free_delivery,expiry,active) VALUES(?,?,?,?,?,1)",
+            "INSERT INTO coupons(code,discount_type,discount_value,free_delivery,expiry,active,max_uses) VALUES(?,?,?,?,?,1,?)",
             (
                 code,
                 d.get("discount_type", "percent"),
                 d.get("discount_value", 0),
                 1 if d.get("free_delivery") else 0,
                 d.get("expiry", ""),
+                int(d.get("max_uses", 0)),
             ),
         )
         c.commit()
@@ -49,13 +50,14 @@ def admin_update_coupon(cid):
     d = request.json
     c = db()
     c.execute(
-        "UPDATE coupons SET discount_type=?,discount_value=?,free_delivery=?,expiry=?,active=? WHERE id=?",
+        "UPDATE coupons SET discount_type=?,discount_value=?,free_delivery=?,expiry=?,active=?,max_uses=? WHERE id=?",
         (
             d.get("discount_type", "percent"),
             d.get("discount_value", 0),
             1 if d.get("free_delivery") else 0,
             d.get("expiry", ""),
             1 if d.get("active", True) else 0,
+            int(d.get("max_uses", 0)),
             cid,
         ),
     )

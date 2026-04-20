@@ -28,6 +28,12 @@ def api_review():
 
     uid = session["user_id"]
     c = db()
+    existing = c.execute(
+        "SELECT id FROM reviews WHERE product_id=? AND user_id=?", (pid, uid)
+    ).fetchone()
+    if existing:
+        c.close()
+        return jsonify({"error": "You have already reviewed this product"}), 400
     un = c.execute("SELECT name FROM users WHERE id=?", (uid,)).fetchone()
     un = un["name"] if un else "Anonymous"
     images_json = json.dumps(images) if images else None

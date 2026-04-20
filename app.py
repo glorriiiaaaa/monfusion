@@ -19,7 +19,7 @@ from db_utils import init_db
 from routes import pages_bp, customer_blueprints, admin_blueprints
 
 app = Flask(__name__, static_folder=".")
-app.secret_key = "mf_v2_ultra_secret_2024"
+app.secret_key = os.environ.get("SECRET_KEY", "mf_v2_ultra_secret_2024")
 app.jinja_env.comment_start_string = "{##"
 app.jinja_env.comment_end_string = "##}"
 

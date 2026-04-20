@@ -137,6 +137,36 @@ def api_profile_update():
     return jsonify({"success": True})
 
 
+
+@bp.route("/api/profile/change-password", methods=["POST"])
+@require_user
+def api_change_password():
+    d = request.json or {}
+    current_pw = d.get("current_password", "")
+    new_pw     = d.get("new_password", "")
+
+    if not current_pw:
+        return jsonify({"error": "Current password is required"}), 400
+    if len(new_pw) < 8:
+        return jsonify({"error": "New password must be at least 8 characters"}), 400
+
+    uid = session["user_id"]
+    c = db()
+    user = c.execute(
+        "SELECT * FROM users WHERE id=? AND password=?", (uid, hp(current_pw))
+    ).fetchone()
+    if not user:
+        c.close()
+        return jsonify({"error": "Current password is incorrect"}), 400
+    if current_pw == new_pw:
+        c.close()
+        return jsonify({"error": "New password must be different from current password"}), 400
+
+    c.execute("UPDATE users SET password=? WHERE id=?", (hp(new_pw), uid))
+    c.commit()
+    c.close()
+    return jsonify({"success": True})
+
 # ── FORGOT PASSWORD ──────────────────────────────────────
 
 import secrets
