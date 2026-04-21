@@ -75,6 +75,8 @@ def api_login():
     c.close()
     if not u:
         return jsonify({"error": "Invalid email or password"}), 401
+    if u["active"] == 0:
+        return jsonify({"error": "Your account has been deactivated. Please contact support."}), 403
     session["user_id"] = u["id"]
     session["user_name"] = u["name"]
     return jsonify(
@@ -136,37 +138,6 @@ def api_profile_update():
     session["user_name"] = nm
     return jsonify({"success": True})
 
-
-
-@bp.route("/api/profile/change-password", methods=["POST"])
-@require_user
-def api_change_password():
-    d = request.json or {}
-    current_pw = d.get("current_password", "")
-    new_pw     = d.get("new_password", "")
-
-    if not current_pw:
-        return jsonify({"error": "Current password is required"}), 400
-    if len(new_pw) < 8:
-        return jsonify({"error": "New password must be at least 8 characters"}), 400
-
-    uid = session["user_id"]
-    c = db()
-    user = c.execute(
-        "SELECT * FROM users WHERE id=? AND password=?", (uid, hp(current_pw))
-    ).fetchone()
-    if not user:
-        c.close()
-        return jsonify({"error": "Current password is incorrect"}), 400
-    if current_pw == new_pw:
-        c.close()
-        return jsonify({"error": "New password must be different from current password"}), 400
-
-    c.execute("UPDATE users SET password=? WHERE id=?", (hp(new_pw), uid))
-    c.commit()
-    c.close()
-    return jsonify({"success": True})
-
 # ── FORGOT PASSWORD ──────────────────────────────────────
 
 import secrets
@@ -177,7 +148,7 @@ from datetime import datetime, timedelta
 # Configure Brevo API
 BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "")
 FROM_EMAIL    = "noreply@brevo.com"
-SITE_URL      = os.environ.get("SITE_URL", "http://localhost:5000")
+SITE_URL      = os.environ.get("SITE_URL", "http://localhost:5001")
 
 
 def _send_reset_email(to_email, token, user_name):

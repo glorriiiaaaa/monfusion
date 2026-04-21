@@ -2,6 +2,7 @@ import os
 from flask import jsonify, session
 from functools import wraps
 
+# Use environment variables if set, otherwise fall back to defaults
 ADMIN_USER = os.environ.get("ADMIN_USERNAME", "ParabStore")
 ADMIN_PASS = os.environ.get("ADMIN_PASSWORD", "Parab@29")
 

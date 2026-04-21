@@ -34,6 +34,7 @@ def init_db():
         is_most_liked INTEGER DEFAULT 0,
         image_url TEXT, images TEXT, active INTEGER DEFAULT 1,
         min_quantity INTEGER DEFAULT 1,
+        stock INTEGER DEFAULT -1,
         created_at TEXT DEFAULT(datetime('now'))
     );
     CREATE TABLE IF NOT EXISTS orders(
@@ -103,6 +104,13 @@ def init_db():
         c.commit()
     except Exception:
         pass  # Column already exists
+
+    # Migrate existing products table — add stock column if missing (-1 = unlimited)
+    try:
+        c.execute("ALTER TABLE products ADD COLUMN stock INTEGER DEFAULT -1")
+        c.commit()
+    except Exception:
+        pass  # Column already exists
     
     # Migrate existing contact_messages table — add is_read column if missing
     try:
@@ -151,6 +159,18 @@ def init_db():
         c.commit()
     except Exception:
         pass  # Column already exists
+
+    # Migrate coupons table — add max_uses, used_count, limit_per_user if missing
+    for col_def in [
+        "max_uses INTEGER DEFAULT 0",
+        "used_count INTEGER DEFAULT 0",
+        "limit_per_user INTEGER DEFAULT 0",
+    ]:
+        try:
+            c.execute(f"ALTER TABLE coupons ADD COLUMN {col_def}")
+            c.commit()
+        except Exception:
+            pass  # Column already exists
 
     if not c.execute("SELECT COUNT(*) FROM products").fetchone()[0]:
         _seed_products(c)

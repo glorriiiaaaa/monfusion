@@ -15,7 +15,7 @@
       <p id="heroSubtitle">Discover magical customised gifts — polaroids, albums, frames &amp; more — lovingly crafted for your most special moments.</p>
       <div class="hero-btns">
         <button class="btn-primary" onclick="showPage('products')" style="font-size:.97rem">🛍 Shop Now</button>
-        <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)" style="font-size:.97rem">🎁 Explore Hampers</button>
+        <button class="btn-secondary" onclick="pendingCategoryFilter='Hampers';showPage('products')" style="font-size:.97rem">🎁 Explore Hampers</button>
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><strong>1K+</strong><span>Happy Customers</span></div>
@@ -44,28 +44,28 @@
       <h2>What are you looking for?</h2>
     </div>
     <div class="cc-grid">
-      <div class="cc-item reveal reveal-delay-1" onclick="showPage('products');setTimeout(()=>setFilter('category','Polaroids'),200)">
+      <div class="cc-item reveal reveal-delay-1" onclick="pendingCategoryFilter='Polaroids';showPage('products')">
         <div class="cc-circle">📸</div><span>Polaroids</span>
       </div>
-      <div class="cc-item reveal reveal-delay-1" onclick="showPage('products');setTimeout(()=>setFilter('category','Albums'),200)">
+      <div class="cc-item reveal reveal-delay-1" onclick="pendingCategoryFilter='Albums';showPage('products')">
         <div class="cc-circle">📔</div><span>Albums</span>
       </div>
-      <div class="cc-item reveal reveal-delay-2" onclick="showPage('products');setTimeout(()=>setFilter('category','Magazines'),200)">
+      <div class="cc-item reveal reveal-delay-2" onclick="pendingCategoryFilter='Magazines';showPage('products')">
         <div class="cc-circle">📖</div><span>Magazines</span>
       </div>
-      <div class="cc-item reveal reveal-delay-2" onclick="showPage('products');setTimeout(()=>setFilter('category','Keychains'),200)">
+      <div class="cc-item reveal reveal-delay-2" onclick="pendingCategoryFilter='Keychains';showPage('products')">
         <div class="cc-circle">🔑</div><span>Keychains</span>
       </div>
-      <div class="cc-item reveal reveal-delay-3" onclick="showPage('products');setTimeout(()=>setFilter('category','Frames'),200)">
+      <div class="cc-item reveal reveal-delay-3" onclick="pendingCategoryFilter='Frames';showPage('products')">
         <div class="cc-circle">🖼</div><span>Frames</span>
       </div>
-      <div class="cc-item reveal reveal-delay-3" onclick="showPage('products');setTimeout(()=>setFilter('category','Fridge Magnets'),200)">
+      <div class="cc-item reveal reveal-delay-3" onclick="pendingCategoryFilter='Fridge Magnets';showPage('products')">
         <div class="cc-circle">🧲</div><span>Fridge Magnets</span>
       </div>
-      <div class="cc-item reveal reveal-delay-4" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)">
+      <div class="cc-item reveal reveal-delay-4" onclick="pendingCategoryFilter='Hampers';showPage('products')">
         <div class="cc-circle">🎁</div><span>Hampers</span>
       </div>
-      <div class="cc-item reveal reveal-delay-4" onclick="showPage('products');setTimeout(()=>setFilter('category','Room Décor'),200)">
+      <div class="cc-item reveal reveal-delay-4" onclick="pendingCategoryFilter='Room D\u00e9cor';showPage('products')">
         <div class="cc-circle">🏡</div><span>Room Décor</span>
       </div>
     </div>
@@ -79,15 +79,15 @@
       <p>Find the perfect gift for every occasion and every person</p>
     </div>
     <div class="hc-grid">
-      <div class="hc-card reveal"            onclick="showPage('products');setTimeout(()=>setFilter('category','Room Décor'),200)"><div class="hc-icon">🏡</div><h3>Room Décor</h3><p>Transform any space</p></div>
-      <div class="hc-card reveal reveal-delay-1" onclick="showPage('products');setTimeout(()=>setFilter('gender','her'),200)"><div class="hc-icon">👑</div><h3>Gifts for Her</h3><p>She'll love it</p></div>
-      <div class="hc-card reveal reveal-delay-1" onclick="showPage('products');setTimeout(()=>setFilter('gender','him'),200)"><div class="hc-icon">🎸</div><h3>Gifts for Him</h3><p>Thoughtful picks</p></div>
-      <div class="hc-card reveal reveal-delay-2" onclick="showPage('products');setTimeout(()=>setFilter('gender','friends'),200)"><div class="hc-icon">🤝</div><h3>For Friends</h3><p>BFF approved</p></div>
-      <div class="hc-card reveal reveal-delay-2" onclick="showPage('products');setTimeout(()=>setFilter('gender','parents'),200)"><div class="hc-icon">🧡</div><h3>For Parents</h3><p>Show your love</p></div>
-      <div class="hc-card reveal reveal-delay-3" onclick="showPage('products');setTimeout(()=>setFilter('best_seller','1'),200)"><div class="hc-icon">🔥</div><h3>Best Sellers</h3><p>Customer faves</p></div>
-      <div class="hc-card reveal reveal-delay-3" onclick="showPage('products');setTimeout(()=>setFilter('max_price','199'),200)"><div class="hc-icon">💸</div><h3>Under ₹199</h3><p>Budget picks</p></div>
-      <div class="hc-card reveal reveal-delay-4" onclick="showPage('products');setTimeout(()=>setFilter('max_price','299'),200)"><div class="hc-icon">🏷</div><h3>Under ₹299</h3><p>Great value</p></div>
-      <div class="hc-card reveal reveal-delay-4" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)"><div class="hc-icon">🎀</div><h3>Hampers</h3><p>Complete sets</p></div>
+      <div class="hc-card reveal"            onclick="pendingCategoryFilter='Room D\u00e9cor';showPage('products')"><div class="hc-icon">🏡</div><h3>Room Décor</h3><p>Transform any space</p></div>
+      <div class="hc-card reveal reveal-delay-1" onclick="pendingCategoryFilter='';showPage('products');setFilter('gender','her')"><div class="hc-icon">👑</div><h3>Gifts for Her</h3><p>She'll love it</p></div>
+      <div class="hc-card reveal reveal-delay-1" onclick="pendingCategoryFilter='';showPage('products');setFilter('gender','him')"><div class="hc-icon">🎸</div><h3>Gifts for Him</h3><p>Thoughtful picks</p></div>
+      <div class="hc-card reveal reveal-delay-2" onclick="pendingCategoryFilter='';showPage('products');setFilter('gender','friends')"><div class="hc-icon">🤝</div><h3>For Friends</h3><p>BFF approved</p></div>
+      <div class="hc-card reveal reveal-delay-2" onclick="pendingCategoryFilter='';showPage('products');setFilter('gender','parents')"><div class="hc-icon">🧡</div><h3>For Parents</h3><p>Show your love</p></div>
+      <div class="hc-card reveal reveal-delay-3" onclick="pendingCategoryFilter='';showPage('products');setFilter('best_seller','1')"><div class="hc-icon">🔥</div><h3>Best Sellers</h3><p>Customer faves</p></div>
+      <div class="hc-card reveal reveal-delay-3" onclick="pendingCategoryFilter='';showPage('products');setFilter('max_price','199')"><div class="hc-icon">💸</div><h3>Under ₹199</h3><p>Budget picks</p></div>
+      <div class="hc-card reveal reveal-delay-4" onclick="pendingCategoryFilter='';showPage('products');setFilter('max_price','299')"><div class="hc-icon">🏷</div><h3>Under ₹299</h3><p>Great value</p></div>
+      <div class="hc-card reveal reveal-delay-4" onclick="pendingCategoryFilter='Hampers';showPage('products')"><div class="hc-icon">🎀</div><h3>Hampers</h3><p>Complete sets</p></div>
     </div>
   </section>
 
@@ -106,7 +106,7 @@
       <div class="skel-card reveal reveal-delay-3"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div><div class="skeleton skel-line xs"></div></div></div>
     </div>
     <div style="text-align:center;margin-top:36px" class="reveal">
-      <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>setFilter('best_seller','1'),200)">View All Best Sellers →</button>
+      <button class="btn-secondary" onclick="showPage('products');setFilter('best_seller','1')">View All Best Sellers →</button>
     </div>
   </section>
 
@@ -162,7 +162,7 @@
       </div>
       <div class="products-grid" id="homeFestival"></div>
       <div style="text-align:center;margin-top:36px" class="reveal">
-        <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>setFilter('category','Hampers'),200)">View All Festival Gifts →</button>
+        <button class="btn-secondary" onclick="pendingCategoryFilter='Hampers';showPage('products')">View All Festival Gifts →</button>
       </div>
     </div>
 
@@ -182,7 +182,7 @@
       <div class="skel-card reveal reveal-delay-3"><div class="skeleton skel-img"></div><div class="skel-body"><div class="skeleton skel-line"></div><div class="skeleton skel-line short"></div></div></div>
     </div>
     <div style="text-align:center;margin-top:36px" class="reveal">
-      <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>document.getElementById('sortSel').value='likes',300);setTimeout(applyFilters,400)">View All Liked Products →</button>
+      <button class="btn-secondary" onclick="showPage('products');setTimeout(()=>{document.getElementById('sortSel').value='likes';applyFilters();},300)">View All Liked Products →</button>
     </div>
   </section>
 

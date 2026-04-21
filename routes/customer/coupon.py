@@ -27,15 +27,16 @@ def api_coupon():
     if max_uses > 0 and used_count >= max_uses:
         c.close()
         return jsonify({"error": "This coupon has reached its usage limit"}), 400
-    # Check per-user usage limit (max 1 use per user)
+    # Check per-user usage limit (limit_per_user=0 means unlimited)
+    limit_per_user = cp["limit_per_user"] if "limit_per_user" in cp.keys() else 0
     uid = session.get("user_id")
-    if uid:
+    if uid and limit_per_user > 0:
         user_uses = c.execute(
             "SELECT COUNT(*) FROM orders WHERE user_id=? AND coupon_code=?", (uid, code)
         ).fetchone()[0]
-        if user_uses >= 1:
+        if user_uses >= limit_per_user:
             c.close()
-            return jsonify({"error": "You have already used this coupon"}), 400
+            return jsonify({"error": "You have reached the usage limit for this coupon"}), 400
     c.close()
     return jsonify(
         {

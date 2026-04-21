@@ -53,11 +53,13 @@ def api_cart_add():
     uid = session["user_id"]
     c = db()
     # Check stock availability (-1 means unlimited)
-    product = c.execute("SELECT stock FROM products WHERE id=? AND active=1", (pid,)).fetchone()
+    product = c.execute("SELECT * FROM products WHERE id=? AND active=1", (pid,)).fetchone()
     if not product:
         c.close()
         return jsonify({"error": "Product not found"}), 404
-    stock = product["stock"]
+    stock = product["stock"] if "stock" in product.keys() else -1
+    if stock is None:
+        stock = -1
     if stock != -1:
         in_cart = c.execute(
             "SELECT COALESCE(SUM(quantity),0) FROM cart WHERE user_id=? AND product_id=?", (uid, pid)

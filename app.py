@@ -12,7 +12,11 @@
 """
 
 import os
+import sys
 from flask import Flask
+
+# Ensure we run from the app's own directory so relative paths (DB, templates) work
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 from db_utils import init_db
 

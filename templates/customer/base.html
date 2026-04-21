@@ -2654,6 +2654,7 @@
       justify-content: center;
       cursor: pointer;
       transition: var(--tr-fast);
+      text-decoration: none;
     }
 
     .social-btn:hover {
@@ -3247,10 +3248,10 @@
         <h3>Mons Fusion 🎁</h3>
         <p id="footerDesc">Creating magical customised gifts for every special moment. Made with love, delivered with care.</p>
         <div class="footer-socials">
-          <button class="social-btn" title="Instagram">📸</button>
-          <button class="social-btn" title="LinkedIn">💼</button>
-          <button class="social-btn" title="Twitter">🐦</button>
-          <button class="social-btn" title="YouTube">▶️</button>
+          <a class="social-btn" href="https://www.instagram.com/mons.fusion?igsh=MTgyYzRmb2pidjQyZw%3D%3D&utm_source=qr" target="_blank" rel="noopener" title="Instagram">📸</a>
+          <a class="social-btn" href="https://www.facebook.com/monicq.parab" target="_blank" rel="noopener" title="Facebook">📘</a>
+          <a class="social-btn" href="https://www.youtube.com/@mons.fusion" target="_blank" rel="noopener" title="YouTube">▶️</a>
+          <a class="social-btn" href="https://in.pinterest.com/monsfusion" target="_blank" rel="noopener" title="Pinterest">📌</a>
         </div>
       </div>
       <div class="footer-col">
@@ -3493,6 +3494,11 @@
     // ═══════════════════════════════════════════
     //  PRODUCTS PAGE
     // ═══════════════════════════════════════════
+    // pendingCategoryFilter holds a category to pre-select after the
+    // category list is rebuilt from the API, eliminating the race condition
+    // between showPage('products') and setTimeout(() => setFilter(...), 200).
+    let pendingCategoryFilter = null;
+
     async function loadProductsPage() {
       // Load categories
       try {
@@ -3502,7 +3508,13 @@
         cats.forEach(c => {
           cf.innerHTML += `<label class="fopt"><input type="radio" name="fcat" value="${c}" onchange="applyFilters()"> ${c}</label>`;
         });
-      } catch (e) { }
+        // Apply pending category filter AFTER list is rebuilt
+        if (pendingCategoryFilter) {
+          const radio = document.querySelector(`input[name=fcat][value="${pendingCategoryFilter}"]`);
+          if (radio) radio.checked = true;
+          pendingCategoryFilter = null;
+        }
+      } catch (e) { pendingCategoryFilter = null; }
       await applyFilters();
     }
 
@@ -3578,29 +3590,50 @@
     }
 
     function setFilter(key, val) {
-      if (key === 'category') {
-        // Wait for categories to load if not yet loaded
-        const checkAndSetCategory = setInterval(() => {
-          const el = document.querySelector(`input[name=fcat][value="${val}"]`);
+      // Poll until the target filter element exists in the DOM,
+      // then apply. This handles the race condition between showPage()
+      // and the async loadProductsPage() that renders filter inputs.
+      const TIMEOUT = 3000;
+      const INTERVAL = 50;
+
+      function pollAndApply(getEl, applyFn) {
+        const start = Date.now();
+        const timer = setInterval(() => {
+          const el = getEl();
           if (el) {
-            el.checked = true;
-            clearInterval(checkAndSetCategory);
+            clearInterval(timer);
+            applyFn(el);
             applyFilters();
+          } else if (Date.now() - start > TIMEOUT) {
+            clearInterval(timer);
           }
-        }, 50);
-        // Timeout after 2 seconds
-        setTimeout(() => clearInterval(checkAndSetCategory), 2000);
+        }, INTERVAL);
+      }
+
+      if (key === 'category') {
+        pollAndApply(
+          () => document.querySelector(`input[name=fcat][value="${val}"]`),
+          el => { el.checked = true; }
+        );
       } else if (key === 'gender') {
-        const el = document.querySelector(`input[name=fgnd][value="${val}"]`);
-        if (el) el.checked = true;
-        applyFilters();
+        pollAndApply(
+          () => document.querySelector(`input[name=fgnd][value="${val}"]`),
+          el => { el.checked = true; }
+        );
       } else if (key === 'best_seller') {
-        document.getElementById('fBestSeller').checked = true;
-        applyFilters();
+        pollAndApply(
+          () => document.getElementById('fBestSeller'),
+          el => { el.checked = true; }
+        );
       } else if (key === 'max_price') {
-        document.getElementById('maxPriceRange').value = val;
-        document.getElementById('maxPriceLabel').textContent = val;
-        applyFilters();
+        pollAndApply(
+          () => document.getElementById('maxPriceRange'),
+          el => {
+            el.value = val;
+            const label = document.getElementById('maxPriceLabel');
+            if (label) label.textContent = val;
+          }
+        );
       }
     }
 
@@ -4339,7 +4372,6 @@
           <div style="margin-top:24px">
             <button class="profile-nav-item active" onclick="openTab('details',this)">👤 Profile Details</button>
             <button class="profile-nav-item" onclick="openTab('orders',this)">📦 My Orders</button>
-            <button class="profile-nav-item" onclick="openTab('security',this)">🔒 Security</button>
           </div>
         </div>
         <div class="profile-content">
@@ -4422,23 +4454,7 @@
             <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:22px">My Orders</h3>
             <div id="ordersContainer"><div style="text-align:center;padding:40px"><div class="spinner" style="width:36px;height:36px;border-width:4px;border-top-color:var(--ac);border-color:rgba(255,79,139,.2);margin:0 auto"></div></div></div>
           </div>
-          <div class="tab-panel" id="tabSecurity">
-            <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:22px">🔒 Change Password</h3>
-            <div class="form-group" style="max-width:420px">
-              <label>Current Password</label>
-              <input type="password" id="pwCurrent" class="form-control" placeholder="Enter current password">
-            </div>
-            <div class="form-group" style="max-width:420px">
-              <label>New Password</label>
-              <input type="password" id="pwNew" class="form-control" placeholder="At least 8 characters">
-            </div>
-            <div class="form-group" style="max-width:420px">
-              <label>Confirm New Password</label>
-              <input type="password" id="pwConfirm" class="form-control" placeholder="Repeat new password">
-            </div>
-            <div id="pwError" style="color:#ff1744;font-size:.82rem;margin-bottom:12px;display:none"></div>
-            <button class="btn-primary" onclick="changePassword()" id="changePwBtn">Update Password</button>
-          </div>
+
         </div>
       </div>`;
       
@@ -4501,7 +4517,6 @@
       document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
       if (el) el.classList.add('active');
       if (tab === 'orders') loadOrders();
-      if (tab === 'security') { /* nothing to load */ }
     }
 
     async function loadOrders() {
@@ -4564,31 +4579,7 @@
       } catch (e) { oc.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Failed to load orders</h3></div>`; }
     }
 
-    async function changePassword() {
-      const current = document.getElementById('pwCurrent').value;
-      const newPw   = document.getElementById('pwNew').value;
-      const confirm = document.getElementById('pwConfirm').value;
-      const errEl   = document.getElementById('pwError');
-      errEl.style.display = 'none';
 
-      if (!current) { errEl.textContent = 'Please enter your current password'; errEl.style.display = 'block'; return; }
-      if (newPw.length < 8) { errEl.textContent = 'New password must be at least 8 characters'; errEl.style.display = 'block'; return; }
-      if (newPw !== confirm) { errEl.textContent = 'Passwords do not match'; errEl.style.display = 'block'; return; }
-
-      const btn = document.getElementById('changePwBtn');
-      btn.innerHTML = '<span class="spinner"></span> Updating...'; btn.disabled = true;
-      try {
-        const d = await API.post('/api/profile/change-password', { current_password: current, new_password: newPw });
-        if (d.error) { errEl.textContent = d.error; errEl.style.display = 'block'; }
-        else {
-          showToast('Password updated successfully! ✅', 'success');
-          document.getElementById('pwCurrent').value = '';
-          document.getElementById('pwNew').value = '';
-          document.getElementById('pwConfirm').value = '';
-        }
-      } catch(e) { errEl.textContent = 'Failed to update password. Try again.'; errEl.style.display = 'block'; }
-      btn.innerHTML = 'Update Password'; btn.disabled = false;
-    }
 
     async function saveProfile() {
       const nm = document.getElementById('profName').value.trim();

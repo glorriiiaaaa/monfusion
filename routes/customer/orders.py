@@ -125,9 +125,27 @@ def api_orders_post():
     if not ph.isdigit() or len(ph) != 10:
         return jsonify({"error": "Phone must be 10 digits"}), 400
 
-    # ── Compute delivery fee on the backend (never trust frontend) ──
+    # ── Validate items and compute prices server-side (never trust frontend prices) ──
     items = d.get("items", [])
-    subtotal = round(sum(item["price"] * item["quantity"] for item in items), 2)
+    if not items:
+        return jsonify({"error": "No items in order"}), 400
+    c2 = db()
+    validated_items = []
+    for item in items:
+        pid = item.get("product_id")
+        qty = int(item.get("quantity", 1))
+        if qty < 1:
+            c2.close()
+            return jsonify({"error": "Invalid quantity"}), 400
+        product = c2.execute("SELECT * FROM products WHERE id=? AND active=1", (pid,)).fetchone()
+        if not product:
+            c2.close()
+            return jsonify({"error": f"Product {pid} not found or unavailable"}), 400
+        real_price = round(product["price"] * (1 - (product["discount"] or 0) / 100), 2)
+        validated_items.append({"product_id": pid, "quantity": qty, "price": real_price, "name": product["name"]})
+    c2.close()
+    items = validated_items
+    subtotal = round(sum(i["price"] * i["quantity"] for i in items), 2)
     delivery_fee = compute_delivery_fee(subtotal)
     final_total = round(subtotal + delivery_fee, 2)
 
@@ -159,6 +177,12 @@ def api_orders_post():
         )
     if uid:
         c.execute("DELETE FROM cart WHERE user_id=?", (uid,))
+    coupon_code = d.get("coupon_code")
+    if coupon_code:
+        c.execute(
+            "UPDATE coupons SET used_count = used_count + 1 WHERE code=?",
+            (coupon_code,),
+        )
     c.commit()
     c.close()
     # Send order confirmation email (non-blocking)
