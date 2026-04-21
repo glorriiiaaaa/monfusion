@@ -22,7 +22,12 @@ def admin_analytics():
 
     monthly = []
     for i in range(5, -1, -1):
-        d_start = (datetime.now().replace(day=1) - timedelta(days=30 * i))
+        d_start = datetime.now().replace(day=1)
+        # Subtract months properly
+        if d_start.month - i <= 0:
+            d_start = d_start.replace(year=d_start.year - 1, month=d_start.month - i + 12)
+        else:
+            d_start = d_start.replace(month=d_start.month - i)
         month_str = d_start.strftime("%Y-%m")
         month_name = d_start.strftime("%b %Y")
         rev = c.execute(
@@ -33,7 +38,13 @@ def admin_analytics():
             "SELECT COUNT(*) FROM orders WHERE created_at LIKE ?",
             (month_str + "%",),
         ).fetchone()[0]
-        monthly.append({"month": month_name, "revenue": round(rev, 2), "orders": cnt})
+        qty = c.execute(
+            "SELECT COALESCE(SUM(oi.quantity),0) FROM order_items oi "
+            "JOIN orders o ON oi.order_id = o.order_id "
+            "WHERE o.created_at LIKE ? AND o.status!='cancelled'",
+            (month_str + "%",),
+        ).fetchone()[0]
+        monthly.append({"month": month_name, "revenue": round(rev, 2), "orders": cnt, "quantity": qty})
 
     best_products = c.execute(
         """
@@ -63,15 +74,8 @@ def admin_analytics():
         "SELECT COALESCE(AVG(total_price),0) FROM orders WHERE status!='cancelled'"
     ).fetchone()[0]
 
-    # Profit = revenue minus cost of goods (order items price) and delivery fees
-    cost_of_goods = c.execute(
-        "SELECT COALESCE(SUM(oi.price * oi.quantity), 0) FROM order_items oi "
-        "JOIN orders o ON oi.order_id = o.order_id WHERE o.status != 'cancelled'"
-    ).fetchone()[0]
-    delivery_costs = c.execute(
-        "SELECT COALESCE(SUM(delivery_fee), 0) FROM orders WHERE status != 'cancelled'"
-    ).fetchone()[0]
-    total_profit = round(total_revenue - cost_of_goods - delivery_costs, 2)
+    # Profit estimated at 40% margin (since we don't track actual cost prices)
+    total_profit = round(total_revenue * 0.40, 2)
 
     c.close()
     return jsonify(

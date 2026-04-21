@@ -790,7 +790,7 @@ function renderRevenueChart(monthly) {
         backgroundColor: monthly.map((_,i)=>`rgba(255,79,139,${0.4+i*0.1})`),
         borderColor:'rgba(255,79,139,.8)', borderWidth:1, borderRadius:6
       },{
-        label:'Orders', data: monthly.map(m=>m.orders),
+        label:'Quantity Sold', data: monthly.map(m=>m.quantity),
         backgroundColor:'rgba(79,139,255,.3)', borderColor:'rgba(79,139,255,.8)',
         borderWidth:1, borderRadius:6, yAxisID:'y2'
       }]
@@ -895,7 +895,7 @@ async function loadAnalytics() {
           borderColor:'#ff4f8b', backgroundColor:'rgba(255,79,139,.1)',
           fill:true, tension:.4, pointBackgroundColor:'#ff4f8b', pointRadius:5
         },{
-          label:'Orders', data:d.monthly.map(m=>m.orders),
+          label:'Quantity Sold', data:d.monthly.map(m=>m.quantity),
           borderColor:'#4f8bff', backgroundColor:'rgba(79,139,255,.08)',
           fill:false, tension:.4, pointBackgroundColor:'#4f8bff', pointRadius:5, yAxisID:'y2'
         }]
@@ -940,7 +940,7 @@ async function loadAnalytics() {
         <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--card2);border-radius:var(--rds)">
           <div>
             <div style="font-size:.84rem;font-weight:600">${m.month}</div>
-            <div style="font-size:.72rem;color:var(--dg)">${m.orders} orders</div>
+            <div style="font-size:.72rem;color:var(--dg)">${m.quantity} items sold</div>
           </div>
           <div style="text-align:right">
             <div style="font-family:var(--mono);font-weight:700;color:var(--green)">₹${fmtNum(m.revenue)}</div>
